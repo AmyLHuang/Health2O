@@ -2,20 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
-import { initializeApp } from '@firebase/app'
+import { firebaseApp } from './FirebaseConfig'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAn2g3rZGbaKckJuNcPnibn3Q3zf7K1cF8",
-  authDomain: "health20-b7852.firebaseapp.com",
-  projectId: "health20-b7852",
-  storageBucket: "health20-b7852.appspot.com",
-  messagingSenderId: "1061496737167",
-  appId: "1:1061496737167:web:b89e6d0673449feecb4ffa",
-  measurementId: "G-ZR3ZCE3N02"
-};
-
-const app = initializeApp(firebaseConfig);
 
 const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogin, handleAuthentication }) => {
   return (
@@ -65,7 +53,7 @@ export default App = () => {
   const [user, setUser] = useState(null); // Track user authentication state
   const [isLogin, setIsLogin] = useState(true);
 
-  const auth = getAuth(app);
+  const auth = getAuth(firebaseApp);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);

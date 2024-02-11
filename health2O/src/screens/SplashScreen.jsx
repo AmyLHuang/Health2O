@@ -1,8 +1,16 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { StyleSheet, View, Text, Button, Image } from "react-native";
 
 const SplashScreen = ({ navigation }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.navigate("Login");
+    }, 3000); // 3 seconds
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
+    
     <View style={styles.container}>
       <Image
         source={require("../../assets/health20.png")}

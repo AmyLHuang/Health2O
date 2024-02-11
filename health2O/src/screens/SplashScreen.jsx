@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import { StyleSheet, View, Text, Button, Image } from "react-native";
 
+
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {

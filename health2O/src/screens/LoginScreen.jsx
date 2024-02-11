@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Button } from "react-native";
+import { StyleSheet, View, Text, TextInput, Button, Image, TouchableOpacity } from "react-native";
 import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
 import { firebaseApp } from "../../FirebaseConfig";
 
@@ -20,26 +20,31 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
-      <Text style={styles.title}>Login Screen</Text>
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry
-      />
-      <Button title="Login" onPress={handleLogin} />
-      <Text onPress={() => navigation.navigate("Signup")}>
-        Need an account? Sign Up
-      </Text>
+    <View style={styles.container}>
+        <Image source={require("../../assets/health20.png")} style = {styles.logo}/>
+        <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter Email"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Enter Password"
+          secureTextEntry
+        />
+        </View>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+          <Text style={styles.signupText}>Need an account? Sign Up</Text>
+        </TouchableOpacity>
+
     </View>
   );
 };
@@ -47,17 +52,45 @@ const LoginScreen = ({ navigation }) => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 22,
-    marginBottom: 16,
-    textAlign: "center",
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    alignItems: 'center',
+  },
+  logo: { 
+    width: 300,
+    height: 300,
+    marginTop: '10%'
+  },
+  inputContainer: {
+    width: '84%',
+    marginBottom: 50,
   },
   input: {
-    height: 40,
-    borderColor: "#ddd",
-    borderWidth: 1,
+    width: '100%',
+    height: 54,
+    borderColor: "#D2D2D2",
+    borderWidth: 2,
+    marginBottom: 10,
+    paddingHorizontal: 8,
+    borderRadius: 15,
+  },
+  loginButton: {
+    width: '84%',
+    height: 50,
+    backgroundColor: "#EC268F",
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 10,
     marginBottom: 16,
-    padding: 8,
-    borderRadius: 4,
+  },
+  loginButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  signupText: {
+    color: "#F58634",
+    fontSize: 14,
   },
 });

@@ -26,12 +26,7 @@ const NewUserInfoScreen = ({ navigation }) => {
     };
 
     try {
-      const docRef = await setDoc(
-        doc(firebaseFirestore, "Users", firebaseAuth.currentUser.uid),
-        info,
-        { merge: true }
-      );
-
+      const docRef = await setDoc(doc(firebaseFirestore, "Users", firebaseAuth.currentUser.uid), info, { merge: true });
       console.log("User data stored successfully!");
       navigation.navigate("Home");
     } catch (error) {
@@ -43,35 +38,14 @@ const NewUserInfoScreen = ({ navigation }) => {
     <View>
       <TextInput placeholder="Age" onChangeText={(text) => setAge(text)} />
       <Text>Height:</Text>
-      <TextInput
-        placeholder="Feet"
-        onChangeText={(text) => setHeightFt(text)}
-      />
-      <TextInput
-        placeholder="Inches"
-        onChangeText={(text) => setHeightIn(text)}
-      />
-      <TextInput
-        placeholder="Gender"
-        onChangeText={(text) => setGender(text)}
-      />
-      <TextInput
-        placeholder="Sleep Goal (hrs.)"
-        onChangeText={(text) => setSleepGoal(text)}
-      />
-      <TextInput
-        placeholder="Daily step goal"
-        onChangeText={(text) => setStepGoal(text)}
-      />
+      <TextInput placeholder="Feet" onChangeText={(text) => setHeightFt(text)} />
+      <TextInput placeholder="Inches" onChangeText={(text) => setHeightIn(text)} />
+      <TextInput placeholder="Gender" onChangeText={(text) => setGender(text)} />
+      <TextInput placeholder="Sleep Goal (hrs.)" onChangeText={(text) => setSleepGoal(text)} />
+      <TextInput placeholder="Daily step goal" onChangeText={(text) => setStepGoal(text)} />
       <Text>Bed Time:</Text>
-      <TextInput
-        placeholder="hh"
-        onChangeText={(text) => setBedTimeHour(text)}
-      />
-      <TextInput
-        placeholder="mm"
-        onChangeText={(text) => setBedTimeMin(text)}
-      />
+      <TextInput placeholder="hh" onChangeText={(text) => setBedTimeHour(text)} />
+      <TextInput placeholder="mm" onChangeText={(text) => setBedTimeMin(text)} />
 
       <Button title="Signup" onPress={handleSignup} />
     </View>

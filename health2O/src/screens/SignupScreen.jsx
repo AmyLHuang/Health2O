@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
@@ -17,11 +11,7 @@ const SignupScreen = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
-      );
+      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
       const uid = userCredential.user.uid;
       userCredential.user.displayName = username;
 
@@ -30,7 +20,7 @@ const SignupScreen = ({ navigation }) => {
       });
       console.log("User created successfully!");
 
-      navigation.navigate("NUI");
+      navigation.navigate("NewUserInfo");
     } catch (error) {
       console.error("Signup error:", error.message);
     }
@@ -41,27 +31,9 @@ const SignupScreen = ({ navigation }) => {
       <Text style={styles.welcome}>Welcome!</Text>
       <Text style={styles.createAccount}>Create an Account</Text>
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={username}
-          onChangeText={setUsername}
-          placeholder="Enter Username"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Enter Email"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Enter Password"
-          secureTextEntry
-        />
+        <TextInput style={styles.input} value={username} onChangeText={setUsername} placeholder="Enter Username" autoCapitalize="none" />
+        <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="Enter Email" autoCapitalize="none" />
+        <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Enter Password" secureTextEntry />
       </View>
       <TouchableOpacity style={styles.loginButton} onPress={handleSignup}>
         <Text style={styles.loginButtonText}>Sign Up</Text>

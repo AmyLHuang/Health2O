@@ -11,6 +11,7 @@ import SleepScreen from "./src/screens/SleepScreen";
 import ExerciseScreen from "./src/screens/ExerciseScreen";
 
 const Stack = createStackNavigator();
+
 const opt1 = {
   gestureEnabled: false,
   headerShown: true,

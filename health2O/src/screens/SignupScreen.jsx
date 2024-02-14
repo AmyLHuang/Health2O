@@ -4,11 +4,11 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
-import { firebaseAuth } from "../../FirebaseConfig";
+import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -22,10 +22,15 @@ const SignupScreen = ({ navigation }) => {
         email,
         password
       );
-      const user = userCredential.user;
+      const uid = userCredential.user.uid;
+      userCredential.user.displayName = username;
+
+      await setDoc(doc(firebaseFirestore, "Users", uid), {
+        username: username,
+      });
       console.log("User created successfully!");
 
-      navigation.navigate("NUI", { user, username });
+      navigation.navigate("NUI");
     } catch (error) {
       console.error("Signup error:", error.message);
     }

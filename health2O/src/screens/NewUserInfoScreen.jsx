@@ -4,25 +4,29 @@ import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
 const NewUserInfoScreen = ({ navigation }) => {
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState(0);
   const [gender, setGender] = useState("");
-  const [heightFt, setHeightFt] = useState("");
-  const [heightIn, setHeightIn] = useState("");
-  const [sleepGoal, setSleepGoal] = useState("");
-  const [stepGoal, setStepGoal] = useState("");
-  const [bedTimeHour, setBedTimeHour] = useState("");
-  const [bedTimeMin, setBedTimeMin] = useState("");
+  const [heightFt, setHeightFt] = useState(0);
+  const [heightIn, setHeightIn] = useState(0);
+  const [sleepGoal, setSleepGoal] = useState(8);
+  const [stepGoal, setStepGoal] = useState(5000);
+  const [bedTimeHour, setBedTimeHour] = useState("10");
+  const [bedTimeMin, setBedTimeMin] = useState("00");
 
   const handleSignup = async () => {
     const info = {
       age: age,
-      heightFeet: heightFt,
-      heightInches: heightIn,
+      height: {
+        ft: heightFt,
+        in: heightIn,
+      },
       gender: gender,
       dailyStepGoal: stepGoal,
       sleepGoal: sleepGoal,
-      bedTimeHour: bedTimeHour,
-      bedTimeMin: bedTimeMin,
+      bedtime: {
+        hh: bedTimeHour,
+        mm: bedTimeMin,
+      },
     };
 
     try {
@@ -36,16 +40,16 @@ const NewUserInfoScreen = ({ navigation }) => {
 
   return (
     <View>
-      <TextInput placeholder="Age" onChangeText={(text) => setAge(text)} />
+      <TextInput placeholder="Age" onChangeText={setAge} />
       <Text>Height:</Text>
-      <TextInput placeholder="Feet" onChangeText={(text) => setHeightFt(text)} />
-      <TextInput placeholder="Inches" onChangeText={(text) => setHeightIn(text)} />
-      <TextInput placeholder="Gender" onChangeText={(text) => setGender(text)} />
-      <TextInput placeholder="Sleep Goal (hrs.)" onChangeText={(text) => setSleepGoal(text)} />
-      <TextInput placeholder="Daily step goal" onChangeText={(text) => setStepGoal(text)} />
+      <TextInput placeholder="Feet" onChangeText={setHeightFt} />
+      <TextInput placeholder="Inches" onChangeText={setHeightIn} />
+      <TextInput placeholder="Gender" onChangeText={setGender} />
+      <TextInput placeholder="Sleep Goal (hrs.)" onChangeText={setSleepGoal} />
+      <TextInput placeholder="Daily step goal" onChangeText={setStepGoal} />
       <Text>Bed Time:</Text>
-      <TextInput placeholder="hh" onChangeText={(text) => setBedTimeHour(text)} />
-      <TextInput placeholder="mm" onChangeText={(text) => setBedTimeMin(text)} />
+      <TextInput placeholder="hh" onChangeText={setBedTimeHour} />
+      <TextInput placeholder="mm" onChangeText={setBedTimeMin} />
 
       <Button title="Signup" onPress={handleSignup} />
     </View>

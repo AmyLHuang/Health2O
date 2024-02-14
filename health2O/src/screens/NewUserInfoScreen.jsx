@@ -1,24 +1,34 @@
 import React, { useState } from "react";
-import { View, TextInput, Button } from "react-native";
-import firestore from "@react-native-firebase/firestore";
+import { View, TextInput, Text, Button } from "react-native";
+import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
-const NewUserInfoScreen = ({ route, navigation }) => {
+const NewUserInfoScreen = ({ navigation }) => {
   const [age, setAge] = useState("");
-  // Add other fields as needed
+  const [gender, setGender] = useState("");
+  const [heightFt, setHeightFt] = useState("");
+  const [heightIn, setHeightIn] = useState("");
+  const [sleepGoal, setSleepGoal] = useState("");
+  const [stepGoal, setStepGoal] = useState("");
+  const [bedTimeHour, setBedTimeHour] = useState("");
+  const [bedTimeMin, setBedTimeMin] = useState("");
 
   const handleSignup = async () => {
-    const { user, username } = route.params;
+    const info = {
+      age: age,
+      heightFeet: heightFt,
+      heightInches: heightIn,
+      gender: gender,
+      dailyStepGoal: stepGoal,
+      sleepGoal: sleepGoal,
+      bedTimeHour: bedTimeHour,
+      bedTimeMin: bedTimeMin,
+    };
 
-    // Use Firebase Firestore to store additional user data
     try {
-      await firestore().collection("users").doc(user.uid).set({
-        username,
-        age,
-        // Add other fields here
-      });
-
+      const docRef = await setDoc(doc(firebaseFirestore, "Users", firebaseAuth.currentUser.uid), info, { merge: true });
       console.log("User data stored successfully!");
-      // Navigate to the main app screen or wherever you want to go after signup
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Error storing user data:", error);
     }
@@ -27,7 +37,16 @@ const NewUserInfoScreen = ({ route, navigation }) => {
   return (
     <View>
       <TextInput placeholder="Age" onChangeText={(text) => setAge(text)} />
-      {/* Add other input fields as needed */}
+      <Text>Height:</Text>
+      <TextInput placeholder="Feet" onChangeText={(text) => setHeightFt(text)} />
+      <TextInput placeholder="Inches" onChangeText={(text) => setHeightIn(text)} />
+      <TextInput placeholder="Gender" onChangeText={(text) => setGender(text)} />
+      <TextInput placeholder="Sleep Goal (hrs.)" onChangeText={(text) => setSleepGoal(text)} />
+      <TextInput placeholder="Daily step goal" onChangeText={(text) => setStepGoal(text)} />
+      <Text>Bed Time:</Text>
+      <TextInput placeholder="hh" onChangeText={(text) => setBedTimeHour(text)} />
+      <TextInput placeholder="mm" onChangeText={(text) => setBedTimeMin(text)} />
+
       <Button title="Signup" onPress={handleSignup} />
     </View>
   );

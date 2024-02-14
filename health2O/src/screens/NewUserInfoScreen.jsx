@@ -1,24 +1,25 @@
 import React, { useState } from "react";
 import { View, TextInput, Button } from "react-native";
-import firestore from "@react-native-firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
+import { firebaseFirestore } from "../../FirebaseConfig";
 
 const NewUserInfoScreen = ({ route, navigation }) => {
   const [age, setAge] = useState("");
-  // Add other fields as needed
+  const [height, setHeight] = useState("");
 
   const handleSignup = async () => {
     const { user, username } = route.params;
+    const uid = user.uid;
 
-    // Use Firebase Firestore to store additional user data
     try {
-      await firestore().collection("users").doc(user.uid).set({
+      const docRef = await addDoc(collection(firebaseFirestore, "users"), {
         username,
         age,
-        // Add other fields here
       });
-
+      console.log("Document written with ID: ", docRef.id);
       console.log("User data stored successfully!");
-      // Navigate to the main app screen or wherever you want to go after signup
+
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Error storing user data:", error);
     }
@@ -27,7 +28,10 @@ const NewUserInfoScreen = ({ route, navigation }) => {
   return (
     <View>
       <TextInput placeholder="Age" onChangeText={(text) => setAge(text)} />
-      {/* Add other input fields as needed */}
+      <TextInput
+        placeholder="Height"
+        onChangeText={(text) => setHeight(text)}
+      />
       <Button title="Signup" onPress={handleSignup} />
     </View>
   );

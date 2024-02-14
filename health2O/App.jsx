@@ -40,7 +40,3 @@ const App = () => {
 };
 
 export default App;
-
-// Note for future:
-// to implement signout: import { getAuth, onAuthStateChanged, signOut } from '@firebase/auth';
-// Citation: https://github.com/cebrailblox/firebase_auth_tutorial

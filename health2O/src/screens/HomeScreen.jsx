@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
 import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 
 const HomeScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
@@ -10,12 +11,8 @@ const HomeScreen = ({ navigation }) => {
     const fetchUserData = async () => {
       try {
         const currentUserId = firebaseAuth.currentUser.uid;
-        console.log("current user: ", currentUserId);
-
         const document = await getDoc(doc(firebaseFirestore, "Users", currentUserId));
-
         if (document.exists()) {
-          // console.log("Document data:", document.data());
           setUserData(document.data());
         } else {
           console.log("No such document!");
@@ -28,11 +25,22 @@ const HomeScreen = ({ navigation }) => {
     fetchUserData();
   }, []); // Empty dependency array to run the effect only once on component mount
 
+  const handleSignOut = async () => {
+    try {
+      await signOut(firebaseAuth);
+      console.log("User logged out successfully!");
+      navigation.navigate("Login");
+    } catch (error) {
+      console.error("SignOut error:", error.message);
+    }
+  };
+
   return (
     <View>
       <Text style={{ fontSize: 20, paddingBottom: 20 }}>Home Screen</Text>
       {userData && <Text style={{ paddingBottom: 20 }}>{`User Data: ${JSON.stringify(userData)}`}</Text>}
-      {userData && <Text>Welcome {userData.username}!</Text>}
+      {userData && <Text style={{ paddingBottom: 20 }}>Welcome {userData.username}!</Text>}
+      <Button title="Sign Out" onPress={handleSignOut} />
     </View>
   );
 };

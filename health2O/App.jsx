@@ -12,14 +12,10 @@ import ExerciseScreen from "./src/screens/ExerciseScreen";
 
 const Stack = createStackNavigator();
 
-const opt1 = {
+const opt = {
   gestureEnabled: false,
   headerShown: true,
   headerLeft: () => <></>,
-};
-
-const opt2 = {
-  gestureEnabled: false,
 };
 
 const App = () => {
@@ -27,10 +23,10 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
         <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen options={opt1} name="Login" component={LoginScreen} />
-        <Stack.Screen options={opt1} name="Signup" component={SignupScreen} />
-        <Stack.Screen name="NewUserInfo" component={NewUserInfoScreen} />
-        <Stack.Screen options={opt2} name="Home" component={HomeScreen} />
+        <Stack.Screen options={opt} name="Login" component={LoginScreen} />
+        <Stack.Screen options={opt} name="Signup" component={SignupScreen} />
+        <Stack.Screen options={opt} name="NewUserInfo" component={NewUserInfoScreen} />
+        <Stack.Screen options={opt} name="Home" component={HomeScreen} />
         <Stack.Screen name="Hydrate" component={HydrationScreen} />
         <Stack.Screen name="Sleep" component={SleepScreen} />
         <Stack.Screen name="Exercise" component={ExerciseScreen} />
@@ -40,7 +36,3 @@ const App = () => {
 };
 
 export default App;
-
-// Note for future:
-// to implement signout: import { getAuth, onAuthStateChanged, signOut } from '@firebase/auth';
-// Citation: https://github.com/cebrailblox/firebase_auth_tutorial

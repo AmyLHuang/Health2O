@@ -5,21 +5,18 @@ import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
 const SignupScreen = ({ navigation }) => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
 
   const handleSignup = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
       const uid = userCredential.user.uid;
-      userCredential.user.displayName = username;
-
       await setDoc(doc(firebaseFirestore, "Users", uid), {
         username: username,
       });
       console.log("User created successfully!");
-
       navigation.navigate("NewUserInfo");
     } catch (error) {
       console.error("Signup error:", error.message);

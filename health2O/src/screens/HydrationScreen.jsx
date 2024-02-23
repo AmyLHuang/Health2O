@@ -137,7 +137,7 @@ export default HydrationScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "lightblue"
+    backgroundColor: "#E9F5FE"
   },
 
   header: {
@@ -159,10 +159,12 @@ const styles = StyleSheet.create({
 
   rec: {
     flex: 1.5,
-    backgroundColor: "lightpink",
+    backgroundColor: "#A5DEFF",
     borderRadius: 10,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
+    borderColor: 'black',
+    borderWidth: 1
   },
 
   subtitle: {
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
   },
 
   recbg: {
-    backgroundColor: "white",
+    backgroundColor: "#CBE9FF",
     borderRadius: 10,
     marginLeft: 10,
     marginRight: 10
@@ -185,7 +187,7 @@ const styles = StyleSheet.create({
 
   target: {
     flex: 1,
-    backgroundColor: "lightpink",
+    backgroundColor: "#CBE9FF",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 10
@@ -208,7 +210,7 @@ const styles = StyleSheet.create({
 
   log: {
     flex: 1,
-    backgroundColor: "lightpink",
+    backgroundColor: "#A5DEFF",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 10,
@@ -232,7 +234,7 @@ const styles = StyleSheet.create({
   bottle: {
     width: 150,
     height: 300,
-    borderColor: 'white',
+    borderColor: 'black',
     borderWidth: 1,
     backgroundColor: 'transparent',
     borderRadius: 20,

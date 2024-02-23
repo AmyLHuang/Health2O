@@ -27,7 +27,7 @@ const App = () => {
         <Stack.Screen options={opt} name="Signup" component={SignupScreen} />
         <Stack.Screen options={opt} name="NewUserInfo" component={NewUserInfoScreen} />
         <Stack.Screen options={opt} name="Home" component={HomeScreen} />
-        <Stack.Screen name="Hydrate" component={HydrationScreen} />
+        <Stack.Screen name="Hydration" component={HydrationScreen} />
         <Stack.Screen name="Sleep" component={SleepScreen} />
         <Stack.Screen name="Exercise" component={ExerciseScreen} />
       </Stack.Navigator>

@@ -46,44 +46,44 @@ const HomeScreen = ({ navigation }) => {
       <Button title="Sign Out" onPress={handleSignOut} />
     </View>
     */
-   
+
     <View style={styles.container}>
-    <Text style={styles.greeting}>👋 Hi {userData.username}!</Text>
-    <View style={styles.searchSection}>
-      <TextInput placeholder="Search..." style={styles.searchInput} />
-      <TouchableOpacity style={styles.searchButton}>
-        <FontAwesomeIcon icon={faSearch} />
-      </TouchableOpacity>
-    </View>
-    <View style={styles.boxContainer}>
-          <TouchableOpacity style={[styles.box, {backgroundColor:'#F1ECEC'}]} onPress={() => navigation.navigate('Sleep')}>
+      <Text style={styles.greeting}>👋 Hi {userData.username}!</Text>
+      <View style={styles.searchSection}>
+        <TextInput placeholder="Search..." style={styles.searchInput} />
+        <TouchableOpacity style={styles.searchButton}>
+          <FontAwesomeIcon icon={faSearch} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.boxContainer}>
+        <TouchableOpacity style={[styles.box, { backgroundColor: "#F1ECEC" }]} onPress={() => navigation.navigate("Sleep")}>
           <FontAwesomeIcon icon={faBed} size={24} color="#091F44" />
-            <Text style={styles.boxText}>Sleep</Text>
-          </TouchableOpacity>
+          <Text style={styles.boxText}>Sleep</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.box, { backgroundColor: '#DEEBFF' }]} onPress={() => navigation.navigate('Hydrate')}>
+        <TouchableOpacity style={[styles.box, { backgroundColor: "#DEEBFF" }]} onPress={() => navigation.navigate("Hydration")}>
           <FontAwesomeIcon icon={faTint} size={24} color="#091F44" />
-            <Text style={styles.boxText}>Hydrate</Text>
-          </TouchableOpacity>
+          <Text style={styles.boxText}>Hydrate</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.box, {backgroundColor: '#E4F8EB'}]} onPress={() => navigation.navigate('Exercise')}>
+        <TouchableOpacity style={[styles.box, { backgroundColor: "#E4F8EB" }]} onPress={() => navigation.navigate("Exercise")}>
           <FontAwesomeIcon icon={faWalking} size={24} color="#091F44" />
-            <Text style={styles.boxText}>Exercise</Text>
-          </TouchableOpacity>
+          <Text style={styles.boxText}>Exercise</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.activityTitle}>My Activity</Text>
+      <View style={styles.activitySection}>
+        <View style={styles.activityRow}>
+          <ActivityBox icon={faBed} label="Sleep" value="8 hours" />
         </View>
-        <Text style={styles.activityTitle}>My Activity</Text>  
-    <View style={styles.activitySection}>
-      <View style={styles.activityRow}>
-        <ActivityBox icon={faBed} label="Sleep" value='8 hours'  />
-      </View>
-      <View style={styles.activityRow}>
-      <ActivityBox icon={faTint} label="Hydrate" value="0.8 liters" />
-      </View>
-      <View style={styles.activityRow}>
-        <ActivityBox icon={faWalking} label="Steps" value='600' />
+        <View style={styles.activityRow}>
+          <ActivityBox icon={faTint} label="Hydrate" value="0.8 liters" />
+        </View>
+        <View style={styles.activityRow}>
+          <ActivityBox icon={faWalking} label="Steps" value="600" />
+        </View>
       </View>
     </View>
-  </View>
   );
 };
 

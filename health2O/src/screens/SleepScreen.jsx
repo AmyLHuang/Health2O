@@ -1,10 +1,13 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView, Button } from "react-native";
 
-const SleepScreen = () => {
+const SleepScreen = ({ navigation }) => {
   return (
     <View>
-      <Text>Sleep Screen</Text>
+      <SafeAreaView>
+        <Text>Sleep Screen</Text>
+      </SafeAreaView>
+      <Text>What is sleep?</Text>
     </View>
   );
 };

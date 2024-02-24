@@ -1,6 +1,6 @@
-import React, {Component, useState} from "react";
-import { View, Text, Image, StyleSheet, Pressable, Animated, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback} from "react-native";
-import RNPickerSelect from 'react-native-picker-select';
+import React, { Component, useState } from "react";
+import { View, Text, Image, StyleSheet, Pressable, ScrollView, Animated, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
 
 const profileImage = require("../../assets/health20.png");
 
@@ -15,21 +15,18 @@ class WaterBottle extends Component {
   fillBottle = () => {
     const waterLevel = this.state.waterLevel;
     if (waterLevel._value < 1.0) {
-      Animated.timing(
-        waterLevel,
-        {
-          toValue: waterLevel._value + 0.125, // Fill water
-          duration: 500,
-          useNativeDriver: false,
-        }
-      ).start();
+      Animated.timing(waterLevel, {
+        toValue: waterLevel._value + 0.125, // Fill water
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
     }
   };
 
   render() {
     const waterLevel = this.state.waterLevel.interpolate({
       inputRange: [0, 1],
-      outputRange: ['0%', '100%'],
+      outputRange: ["0%", "100%"],
     });
 
     return (
@@ -44,8 +41,8 @@ class WaterBottle extends Component {
   }
 }
 
-const HydrationScreen = ()  => {
-  const [amount, setAmount] = useState('');
+const HydrationScreen = () => {
+  const [amount, setAmount] = useState("");
   const [selectedUnit, setSelectedUnit] = useState(null);
   const animated = new Animated.Value(1);
 
@@ -65,70 +62,70 @@ const HydrationScreen = ()  => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <View style={styles.screen}>
-
-      <View style={styles.header}>
-        <Text style={styles.title}>Hydration</Text>
-        <Image style={styles.pfp} source={profileImage}/>
-      </View>
-
-      <View style={styles.rec}>
-        <Text style={styles.subtitle}>Recommendation</Text>
-        <View style={styles.recbg}>
-          <Text style={styles.rectext}>Drinking water first thing in the morning can help get your metabolism running and give you an energizing effect. - Dr. Luckey</Text>
-        </View>
-      </View>
-
-      <View style={{flex: 1.2, flexDirection: "row"}}>
-
-        <View style={styles.target}>
-          <Text style={styles.subtitle}>Target</Text>
-          <View style={{flexDirection: "row"}}>
-            <View style={styles.targetbg}>
-              <TextInput 
-                style={styles.targettext}
-                keyboardType="numeric" 
-                placeholder="Amount" 
-                value={amount} 
-                onChangeText={amount => setAmount(amount)}
-                onEndEditing={() => Keyboard.dismiss()}
-              />
+    <ScrollView style={styles.screen}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View>
+          <SafeAreaView>
+            <View style={styles.header}>
+              <Text style={styles.title}>Hydration</Text>
+              <Image style={styles.pfp} source={profileImage} />
             </View>
-            <View style={styles.targetbg}>
-              <RNPickerSelect
-                style={{inputIOS: {textAlign: "center"}}}
-                placeholder={{label: "Unit", value: null}}
-                value={selectedUnit}
-                onValueChange={(unit) => setSelectedUnit(unit)}
-                items={[
-                  { label: 'Grams', value: 'Grams' },
-                  { label: 'Miligrams', value: 'Miligrams' },
-                  { label: 'Ounces', value: 'Ounces' },
-                  { label: 'Liters', value: 'Liters' },
-                  { label: 'Mililiters', value: 'Mililiters' },
-                ]}
-              />
+          </SafeAreaView>
+
+          <View style={styles.rec}>
+            <Text style={styles.subtitle}>Recommendation</Text>
+            <View style={styles.recbg}>
+              <Text style={styles.rectext}>Drinking water first thing in the morning can help get your metabolism running and give you an energizing effect. - Dr. Luckey</Text>
             </View>
           </View>
+
+          <View style={{ flex: 1.2, flexDirection: "row" }}>
+            <View style={styles.target}>
+              <Text style={styles.subtitle}>Target</Text>
+              <View style={{ flexDirection: "row" }}>
+                <View style={styles.targetbg}>
+                  <TextInput
+                    style={styles.targettext}
+                    keyboardType="numeric"
+                    placeholder="Amount"
+                    value={amount}
+                    onChangeText={(amount) => setAmount(amount)}
+                    onEndEditing={() => Keyboard.dismiss()}
+                  />
+                </View>
+                <View style={styles.targetbg}>
+                  <RNPickerSelect
+                    style={{ inputIOS: { textAlign: "center" } }}
+                    placeholder={{ label: "Unit", value: null }}
+                    value={selectedUnit}
+                    onValueChange={(unit) => setSelectedUnit(unit)}
+                    items={[
+                      { label: "Grams", value: "Grams" },
+                      { label: "Miligrams", value: "Miligrams" },
+                      { label: "Ounces", value: "Ounces" },
+                      { label: "Liters", value: "Liters" },
+                      { label: "Mililiters", value: "Mililiters" },
+                    ]}
+                  />
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.log}>
+              <Pressable onPressIn={fadeIn} onPressOut={fadeOut}>
+                <Animated.View style={{ opacity: animated }}>
+                  <Text style={[styles.subtitle]}>Hydration Log</Text>
+                </Animated.View>
+              </Pressable>
+            </View>
+          </View>
+
+          <View style={styles.progressBar}>
+            <WaterBottle />
+          </View>
         </View>
-
-        <View style={styles.log}>
-          <Pressable onPressIn={fadeIn} onPressOut={fadeOut}>
-            <Animated.View style={{opacity: animated}}>
-              <Text style={[styles.subtitle]}>Hydration Log</Text>
-            </Animated.View>
-          </Pressable>
-        </View>
-
-      </View>
-
-      <View style={styles.progressBar}>
-        <WaterBottle/>
-      </View>
-
-    </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 };
 
@@ -137,24 +134,25 @@ export default HydrationScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#E9F5FE"
+    backgroundColor: "#E9F5FE",
   },
 
   header: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    marginBottom: 20,
   },
 
   title: {
     fontSize: 36,
-    marginLeft: 10
+    marginLeft: 10,
   },
 
   pfp: {
-    aspectRatio: 6, 
-    resizeMode: 'contain',
-    marginLeft: 40
+    aspectRatio: 6,
+    resizeMode: "contain",
+    marginLeft: 40,
   },
 
   rec: {
@@ -163,26 +161,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 10,
     marginRight: 10,
-    borderColor: 'black',
-    borderWidth: 1
+    borderColor: "black",
+    borderWidth: 1,
   },
 
   subtitle: {
     fontSize: 15,
-    margin: 8,
-    marginLeft: 10
+    margin: 3,
+    marginLeft: 10,
   },
 
   recbg: {
     backgroundColor: "#CBE9FF",
     borderRadius: 10,
-    marginLeft: 10,
-    marginRight: 10
+    margin: 8,
   },
 
   rectext: {
     padding: 5,
-    fontSize: 13
+    fontSize: 13,
   },
 
   target: {
@@ -190,22 +187,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#CBE9FF",
     borderRadius: 10,
     marginTop: 10,
-    marginLeft: 10
+    marginLeft: 10,
   },
 
   targetbg: {
     backgroundColor: "white",
     borderRadius: 10,
-    marginLeft: 10,
-    marginRight: 10,
+    margin: 10,
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
 
   targettext: {
     fontSize: 13,
-    padding: 10
+    padding: 10,
   },
 
   log: {
@@ -216,36 +212,37 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
 
   progressBar: {
     flex: 6,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    marginTop: 50,
   },
 
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   bottle: {
     width: 150,
     height: 300,
-    borderColor: 'black',
+    borderColor: "black",
     borderWidth: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderRadius: 20,
-    overflow: "hidden"
+    overflow: "hidden",
   },
 
   water: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'blue'
-  }
+    backgroundColor: "blue",
+  },
 });

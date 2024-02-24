@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView } from "react-native";
-import AppleHealthKit from "react-native-health";
 import { Pedometer } from "expo-sensors";
 import Animated, { useSharedValue, useAnimatedProps, withTiming } from "react-native-reanimated";
 import SVG, { Circle } from "react-native-svg";
@@ -47,36 +46,6 @@ const ExerciseScreen = () => {
     const subscription = getSteps();
     return () => subscription && subscription.remove();
   }, []);
-
-  // const PERMS = AppleHealthKit.Constants.Permissions;
-  // const [steps, setSteps] = useState(0);
-  // const [flights, setFlights] = useState(0);
-  // const [distance, setDistance] = useState(0);
-
-  // const permissions = {
-  //   permissions: {
-  //     read: [PERMS.StepCount, PERMS.FlightsClimbed, PERMS.DistanceWalkingRunning],
-  //   },
-  // };
-
-  // useEffect(() => {
-  //   let options = {
-  //     date: new Date(),
-  //   };
-  //   AppleHealthKit.initHealthKit(permissions, (error) => {
-  //     if (error) {
-  //       console.log("Error getting permissions for Apple HealthKit")
-  //     }
-  //   });
-  //   AppleHealthKit.getStepCount(options, (error, results) => {
-  //     if (error) {
-  //       console.log("Error getting steps");
-  //     }
-  //     else {
-  //       setSteps(results.value);
-  //     }
-  //   });
-  // })
 
   return (
     <View>

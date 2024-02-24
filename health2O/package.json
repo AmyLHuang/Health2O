@@ -28,7 +28,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "^0.73.4",
-    "react-native-health": "^1.18.0",
     "react-native-picker-select": "^9.0.1",
     "react-native-reanimated": "~3.6.2",
     "react-native-svg": "^14.1.0",

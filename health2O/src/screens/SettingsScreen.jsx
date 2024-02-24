@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, SafeAreaView, Button } from "react-native";
+import { View, Text, SafeAreaView, Button, StyleSheet } from "react-native";
 import { firebaseAuth } from "../../FirebaseConfig";
 import { signOut } from "firebase/auth";
 
@@ -15,9 +15,9 @@ const SettingsScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <SafeAreaView>
-        <Text>Settings Screen</Text>
+        <Text style={styles.title}>Settings Screen</Text>
       </SafeAreaView>
       <Button style={(padding = 10)} title="Sign Out" onPress={handleSignOut} />
     </View>
@@ -25,3 +25,19 @@ const SettingsScreen = ({ navigation }) => {
 };
 
 export default SettingsScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f2f2f2",
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#EC268F",
+    marginTop: 20,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+});

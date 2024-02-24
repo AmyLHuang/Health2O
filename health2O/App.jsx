@@ -82,7 +82,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
-        <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen options={opt} name="Splash" component={SplashScreen} />
         <Stack.Screen options={opt} name="Login" component={LoginScreen} />
         <Stack.Screen options={opt} name="Signup" component={SignupScreen} />
         <Stack.Screen options={opt} name="NewUserInfo" component={NewUserInfoScreen} />

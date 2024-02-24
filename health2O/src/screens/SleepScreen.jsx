@@ -8,7 +8,6 @@ const SleepScreen = ({ navigation }) => {
         <Text>Sleep Screen</Text>
       </SafeAreaView>
       <Text>What is sleep?</Text>
-      <Button title={"Go Home"} onPress={() => navigation.navigate("Home")}></Button>
     </View>
   );
 };

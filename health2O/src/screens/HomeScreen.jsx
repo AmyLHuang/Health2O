@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, ScrollView, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
 import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import { signOut } from "firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faTint, faWalking, faBed, faWater, faHeartbeat } from "@fortawesome/free-solid-svg-icons";
 
@@ -26,16 +25,6 @@ const HomeScreen = ({ navigation }) => {
 
     fetchUserData();
   }, []); // Empty dependency array to run the effect only once on component mount
-
-  const handleSignOut = async () => {
-    try {
-      await signOut(firebaseAuth);
-      console.log("User logged out successfully!");
-      navigation.navigate("Login");
-    } catch (error) {
-      console.error("SignOut error:", error.message);
-    }
-  };
 
   return (
     /* User data: JSON.stringify(userData) */
@@ -80,8 +69,6 @@ const HomeScreen = ({ navigation }) => {
               <ActivityBox icon={faWalking} label="Steps" value="600" />
             </View>
           </View>
-
-          {/* <Button style={(padding = 10)} title="Sign Out" onPress={handleSignOut} /> */}
         </View>
       </ScrollView>
     </SafeAreaView>

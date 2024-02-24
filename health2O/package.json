@@ -1,5 +1,5 @@
 {
-  "name": "health2o",
+  "name": "health20",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -17,21 +17,22 @@
     "@react-native-firebase/app": "^18.8.0",
     "@react-native-firebase/auth": "^18.8.0",
     "@react-native-firebase/firestore": "^18.8.0",
+    "@react-navigation/bottom-tabs": "^6.5.12",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/stack": "^6.3.21",
     "expo": "^50.0.7",
+    "expo-dev-client": "~3.3.8",
+    "expo-sensors": "~12.9.1",
     "expo-status-bar": "~1.11.1",
     "firebase": "^10.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "^0.73.4",
     "react-native-health": "^1.18.0",
-    "expo-sensors": "~12.9.1",
-    "expo-dev-client": "~3.3.8",
+    "react-native-picker-select": "^9.0.1",
     "react-native-reanimated": "~3.6.2",
     "react-native-svg": "^14.1.0",
-    "react-native-web": "~0.19.6",
-    "react-native-picker-select": "^9.0.1"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

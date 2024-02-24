@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
@@ -25,7 +25,9 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome!</Text>
+      <SafeAreaView>
+        <Text style={styles.welcome}>Welcome!</Text>
+      </SafeAreaView>
       <Text style={styles.createAccount}>Create an Account</Text>
       <View style={styles.inputContainer}>
         <TextInput style={styles.input} value={username} onChangeText={setUsername} placeholder="Enter Username" autoCapitalize="none" />
@@ -50,13 +52,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     alignItems: "center",
-    paddingTop: "10%",
+    paddingTop: "22%",
   },
   welcome: {
     fontSize: 28,
     color: "#EC268F",
     textAlign: "left",
-    marginBottom: 8,
+    marginBottom: 20,
   },
   createAccount: {
     fontSize: 18,

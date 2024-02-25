@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, ScrollView, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
 import { auth, firestore } from "../../FirebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faTint, faWalking, faBed, faWater, faHeartbeat } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,22 +9,28 @@ const HomeScreen = ({ navigation }) => {
   const [userData, setUserData] = useState("");
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserData = () => {
       try {
         const currentUserId = auth.currentUser.uid;
-        const document = await getDoc(doc(firestore, "Users", currentUserId));
-        if (document.exists()) {
-          setUserData(document.data());
-        } else {
-          console.log("No such document!");
-        }
+        const userDocRef = doc(firestore, "Users", currentUserId);
+
+        const unsubscribe = onSnapshot(userDocRef, (document) => {
+          if (document.exists()) {
+            setUserData(document.data());
+          } else {
+            console.log("No such document!");
+          }
+        });
+
+        // Return a cleanup function to unsubscribe when the component unmounts
+        return () => unsubscribe();
       } catch (error) {
         console.error("Error fetching user data:", error.message);
       }
     };
 
     fetchUserData();
-  }, []); // Empty dependency array to run the effect only once on component mount
+  }, [firestore, auth.currentUser.uid]);
 
   return (
     /* User data: JSON.stringify(userData) */

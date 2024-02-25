@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, TextInput, Text, Button, StyleSheet, Alert, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
-import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
+import { auth, firestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
 const NewUserInfoScreen = ({ navigation }) => {
@@ -34,7 +34,7 @@ const NewUserInfoScreen = ({ navigation }) => {
       },
     };
     try {
-      const docRef = await setDoc(doc(firebaseFirestore, "Users", firebaseAuth.currentUser.uid), info, { merge: true });
+      const docRef = await setDoc(doc(firestore, "Users", auth.currentUser.uid), info, { merge: true });
       console.log("User data stored successfully!");
       navigation.navigate("Home");
     } catch (error) {

@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, SafeAreaView, Button, StyleSheet } from "react-native";
-import { firebaseAuth } from "../../FirebaseConfig";
-import { signOut } from "firebase/auth";
+import { signOut } from "@firebase/auth";
+import { auth } from "../../FirebaseConfig";
 
 const SettingsScreen = ({ navigation }) => {
   const handleSignOut = async () => {
     try {
-      await signOut(firebaseAuth);
+      await signOut(auth);
       console.log("User logged out successfully!");
       navigation.navigate("Login");
     } catch (error) {

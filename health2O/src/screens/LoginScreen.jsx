@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import { signInWithEmailAndPassword } from "@firebase/auth";
-import { firebaseAuth } from "../../FirebaseConfig";
+import { auth } from "../../FirebaseConfig";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -9,7 +9,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(firebaseAuth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       console.log("User signed in successfully!");
       navigation.navigate("Home");
     } catch (error) {

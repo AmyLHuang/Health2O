@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, ScrollView, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
-import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
+import { auth, firestore } from "../../FirebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faTint, faWalking, faBed, faWater, faHeartbeat } from "@fortawesome/free-solid-svg-icons";
@@ -11,8 +11,8 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const currentUserId = firebaseAuth.currentUser.uid;
-        const document = await getDoc(doc(firebaseFirestore, "Users", currentUserId));
+        const currentUserId = auth.currentUser.uid;
+        const document = await getDoc(doc(firestore, "Users", currentUserId));
         if (document.exists()) {
           setUserData(document.data());
         } else {

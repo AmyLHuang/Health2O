@@ -1,40 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, ScrollView, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
-import { auth, firestore } from "../../FirebaseConfig";
-import { onSnapshot, doc } from "firebase/firestore";
+import React from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faTint, faWalking, faBed, faWater, faHeartbeat } from "@fortawesome/free-solid-svg-icons";
+import useUserData from "../hooks/userApi";
 
 const HomeScreen = ({ navigation }) => {
-  const [userData, setUserData] = useState("");
-
-  useEffect(() => {
-    const fetchUserData = () => {
-      try {
-        const currentUserId = auth.currentUser.uid;
-        const userDocRef = doc(firestore, "Users", currentUserId);
-
-        const unsubscribe = onSnapshot(userDocRef, (document) => {
-          if (document.exists()) {
-            setUserData(document.data());
-          } else {
-            console.log("No such document!");
-          }
-        });
-
-        // Return a cleanup function to unsubscribe when the component unmounts
-        return () => unsubscribe();
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
-      }
-    };
-
-    fetchUserData();
-  }, [firestore, auth.currentUser.uid]);
+  const userData = useUserData();
 
   return (
-    /* User data: JSON.stringify(userData) */
-
     <SafeAreaView edges={["right", "left", "top"]}>
       <ScrollView>
         <View style={styles.container}>

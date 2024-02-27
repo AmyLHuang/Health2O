@@ -1,34 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faTint, faWalking, faBed, faWater, faHeartbeat } from "@fortawesome/free-solid-svg-icons";
-import { useFocusEffect } from "@react-navigation/native";
-import { doc, onSnapshot, getDoc, setDoc } from "firebase/firestore";
-import { auth, firestore } from "../../FirebaseConfig";
+import useUserData from "../hooks/useUserData";
 
 const HomeScreen = ({ navigation }) => {
-  const [userData, setUserData] = useState("");
-
-  const fetchData = async () => {
-    try {
-      if (auth.currentUser) {
-        const docSnap = await getDoc(doc(firestore, "Users", auth.currentUser.uid));
-        if (docSnap.exists()) {
-          setUserData(docSnap.data());
-        } else {
-          console.log("No such document!");
-        }
-      } else {
-        console.log("User not logged in");
-      }
-    } catch (error) {
-      console.error("Error fetching user document (2):", error);
-    }
-  };
-
-  useFocusEffect(() => {
-    fetchData();
-  });
+  const userData = useUserData();
 
   return (
     <SafeAreaView edges={["right", "left", "top"]}>

@@ -1,33 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { doc, onSnapshot, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../../FirebaseConfig";
+import useUserData from "../hooks/useUserData";
 
 const EditProfileScreen = ({ navigation }) => {
   const [newValue, setNewValue] = useState("");
-  const [userData, setUserData] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Check if the user is logged in
-        if (auth.currentUser) {
-          const docSnap = await getDoc(doc(firestore, "Users", auth.currentUser.uid));
-          if (docSnap.exists()) {
-            setUserData(docSnap.data());
-          } else {
-            console.log("No such document!");
-          }
-        } else {
-          console.log("User not logged in");
-        }
-      } catch (error) {
-        console.error("Error fetching user document (1):", error);
-      }
-    };
-
-    fetchData();
-  }, [userData, auth.currentUser.uid]);
+  const userData = useUserData();
 
   const handleUpdatePress = async () => {
     // Display a yes/no confirmation alert

@@ -1,44 +1,32 @@
-import { useState, useEffect } from "react";
-import { auth, firestore } from "../../FirebaseConfig";
-import { onSnapshot, doc } from "firebase/firestore";
+// import { useState, useEffect } from "react";
+// import { doc, getDoc } from "firebase/firestore";
+// import { auth, firestore } from "../../FirebaseConfig";
 
-const useUserData = () => {
-  const [userData, setUserData] = useState("");
+// const useUserDocument = () => {
+//   const [userDocument, setUserDocument] = useState(null);
+//   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const currentUser = auth.currentUser;
+//   useEffect(() => {
+//     const fetchUserDocument = async () => {
+//       try {
+//         const docSnap = await getDoc(doc(firestore, "Users", auth.currentUser.uid));
 
-        if (!currentUser) {
-          setUserData(null);
-          return;
-        }
+//         if (docSnap.exists()) {
+//           setUserDocument(docSnap.data());
+//         } else {
+//           console.log("No such document!");
+//         }
+//       } catch (error) {
+//         console.error("Error fetching user document:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
 
-        const currentUserId = currentUser.uid;
-        const userDocRef = doc(firestore, "Users", currentUserId);
+//     fetchUserDocument();
+//   }, [auth.currentUser.uid]); // Trigger fetch when the user ID changes
 
-        const unsubscribe = onSnapshot(userDocRef, (document) => {
-          if (document.exists()) {
-            setUserData(document.data());
-          } else {
-            console.log("No such document!");
-          }
-        });
+//   return { userDocument, loading };
+// };
 
-        // Return a cleanup function to unsubscribe when the component unmounts
-        return () => unsubscribe();
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
-      }
-    };
-
-    fetchUserData();
-  }, [firestore, auth.currentUser.uid]);
-
-  return userData;
-};
-
-export default useUserData;
-
-/* User data: JSON.stringify(userData) */
+// export default useUserDocument;

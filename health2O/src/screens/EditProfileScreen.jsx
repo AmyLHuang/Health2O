@@ -1,12 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, getDoc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../../FirebaseConfig";
-import useUserData from "../hooks/userApi";
 
 const EditProfileScreen = ({ navigation }) => {
-  const userData = useUserData();
   const [newValue, setNewValue] = useState("");
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Check if the user is logged in
+        if (auth.currentUser) {
+          const docSnap = await getDoc(doc(firestore, "Users", auth.currentUser.uid));
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          } else {
+            console.log("No such document!");
+          }
+        } else {
+          console.log("User not logged in");
+        }
+      } catch (error) {
+        console.error("Error fetching user document (1):", error);
+      }
+    };
+
+    fetchData();
+  }, [userData, auth.currentUser.uid]);
 
   const handleUpdatePress = async () => {
     // Display a yes/no confirmation alert
@@ -37,8 +58,8 @@ const EditProfileScreen = ({ navigation }) => {
       <SafeAreaView>
         <Text style={styles.title}>Edit Profile</Text>
       </SafeAreaView>
-      <Button title="Go Back" onPress={() => navigation.goBack()}></Button>
-      <Text style={styles.marginBottom}>{JSON.stringify(userData)}</Text>
+      <Button title="Go Back" onPress={() => navigation.navigate("Settings")}></Button>
+      {/* <Text style={styles.marginBottom}>{JSON.stringify(userData)}</Text> */}
       <View>
         <Text>Change Username: </Text>
         <TextInput style={styles.input} placeholder="New Username" value={newValue} onChangeText={(text) => setNewValue(text)} />

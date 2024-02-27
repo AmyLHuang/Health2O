@@ -6,8 +6,7 @@ import { auth } from "../../FirebaseConfig";
 const SettingsScreen = ({ navigation }) => {
   const handleSignOut = async () => {
     try {
-      signOut(auth);
-      console.log("User logged out successfully!");
+      await signOut(auth);
       navigation.navigate("Login");
     } catch (error) {
       console.error("SignOut error:", error.message);

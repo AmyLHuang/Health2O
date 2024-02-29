@@ -38,7 +38,7 @@ const EditProfileScreen = ({ navigation }) => {
         <Text style={styles.title}>Edit Profile</Text>
       </SafeAreaView>
       <Button title="Go Back" onPress={() => navigation.navigate("Settings")}></Button>
-      {/* <Text style={styles.marginBottom}>{JSON.stringify(userData)}</Text> */}
+      <Text style={styles.marginBottom}>{JSON.stringify(userData)}</Text>
       <View>
         <Text>Change Username: </Text>
         <TextInput style={styles.input} placeholder={userData.username} value={newUsername} onChangeText={(text) => setNewUsername(text)} />

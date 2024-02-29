@@ -13,6 +13,7 @@ import SleepScreen from "./src/screens/SleepScreen";
 import ExerciseScreen from "./src/screens/ExerciseScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import EditProfileScreen from "./src/screens/EditProfileScreen";
+import AboutScreen from "./src/screens/AboutScreen";
 
 const options = {
   gestureEnabled: false,
@@ -37,6 +38,7 @@ const SettingsStackNavigator = () => (
   <SettingsStack.Navigator screenOptions={options}>
     <SettingsStack.Screen name="Settings" component={SettingsScreen} />
     <SettingsStack.Screen name="EditProfile" component={EditProfileScreen} />
+    <SettingsStack.Screen name="About" component={AboutScreen} />
   </SettingsStack.Navigator>
 );
 

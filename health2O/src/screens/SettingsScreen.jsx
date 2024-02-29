@@ -7,6 +7,7 @@ const SettingsScreen = ({ navigation }) => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
+      console.log("User signed out successfully!");
       navigation.navigate("Login");
     } catch (error) {
       console.error("SignOut error:", error.message);

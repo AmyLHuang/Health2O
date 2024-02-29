@@ -24,7 +24,8 @@ const MainTabStack = createBottomTabNavigator();
 const SettingsStack = createStackNavigator();
 
 const AuthStackNavigator = () => (
-  <AuthStack.Navigator screenOptions={options}>
+  <AuthStack.Navigator screenOptions={options} initialRouteName="Splash">
+    <AuthStack.Screen name="Splash" component={SplashScreen} />
     <AuthStack.Screen name="Login" component={LoginScreen} />
     <AuthStack.Screen name="Signup" component={SignupScreen} />
     <AuthStack.Screen name="NewUserInfo" component={NewUserInfoScreen} />

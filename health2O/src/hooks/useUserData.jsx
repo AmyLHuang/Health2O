@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
-import { useFocusEffect } from "@react-navigation/native";
 import { auth, firestore } from "../../FirebaseConfig";
 
 const useUserData = () => {
@@ -13,19 +12,17 @@ const useUserData = () => {
         if (docSnap.exists()) {
           setUserData(docSnap.data());
         } else {
-          console.log("No such document!");
+          console.log("Error fetching user document: No such document!");
         }
-      } else {
-        console.log("User not logged in");
       }
     } catch (error) {
       console.error("Error fetching user document:", error);
     }
   };
 
-  useFocusEffect(() => {
+  useEffect(() => {
     fetchData();
-  });
+  }, [userData]);
 
   return userData;
 };

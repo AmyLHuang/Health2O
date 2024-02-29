@@ -5,12 +5,12 @@ import { auth, firestore } from "../../FirebaseConfig";
 import useUserData from "../hooks/useUserData";
 
 const EditProfileScreen = ({ navigation }) => {
-  const [newValue, setNewValue] = useState("");
+  const [newUsername, setNewUsername] = useState("");
   const userData = useUserData();
 
   const handleUpdatePress = async () => {
     // Display a yes/no confirmation alert
-    Alert.alert("Confirmation", `Are you sure you want to update username to ${newValue}?`, [
+    Alert.alert("Confirmation", `Are you sure you want to update profile?`, [
       { text: "No", style: "cancel" },
       {
         text: "Yes",
@@ -25,8 +25,8 @@ const EditProfileScreen = ({ navigation }) => {
   const updateFirestoreDocument = async () => {
     try {
       // Update the value in the specified document
-      await setDoc(doc(firestore, "Users", auth.currentUser.uid), { username: newValue }, { merge: true });
-      Alert.alert("Successfully updated username to", newValue);
+      await setDoc(doc(firestore, "Users", auth.currentUser.uid), { username: newUsername }, { merge: true });
+      Alert.alert("Successfully updated profile info");
     } catch (error) {
       console.error("Error updating document: ", error);
     }
@@ -41,7 +41,7 @@ const EditProfileScreen = ({ navigation }) => {
       {/* <Text style={styles.marginBottom}>{JSON.stringify(userData)}</Text> */}
       <View>
         <Text>Change Username: </Text>
-        <TextInput style={styles.input} placeholder="New Username" value={newValue} onChangeText={(text) => setNewValue(text)} />
+        <TextInput style={styles.input} placeholder={userData.username} value={newUsername} onChangeText={(text) => setNewUsername(text)} />
         <Button title="Change Username" onPress={handleUpdatePress} />
       </View>
     </View>

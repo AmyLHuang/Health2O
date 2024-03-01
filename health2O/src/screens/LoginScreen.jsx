@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import { firebaseAuth } from "../../FirebaseConfig";
 
@@ -19,7 +19,9 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require("../../assets/health20.png")} style={styles.logo} />
+      <SafeAreaView>
+        <Image source={require("../../assets/health20.png")} style={styles.logo} />
+      </SafeAreaView>
       <View style={styles.inputContainer}>
         <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="Enter Email" autoCapitalize="none" />
         <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Enter Password" secureTextEntry />
@@ -46,10 +48,11 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     marginTop: "10%",
+    marginBottom: "10%",
   },
   inputContainer: {
     width: "84%",
-    marginBottom: 50,
+    marginBottom: 10,
   },
   input: {
     width: "100%",

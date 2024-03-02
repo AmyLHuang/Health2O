@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, Platform, Keyboard, KeyboardAvoidingView } from "react-native";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
@@ -24,6 +24,10 @@ const SignupScreen = ({ navigation }) => {
   };
 
   return (
+    <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
     <View style={styles.container}>
       <SafeAreaView>
         <Text style={styles.welcome}>Welcome!</Text>
@@ -42,6 +46,7 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.signupText}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
+    </KeyboardAvoidingView>
   );
 };
 

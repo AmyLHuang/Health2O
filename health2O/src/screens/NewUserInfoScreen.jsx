@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, Button, StyleSheet, Alert, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
+import { View, TextInput, Text, Button, StyleSheet, Alert, ScrollView, TouchableOpacity, SafeAreaView, Keyboard, KeyboardAvoidingView, Platform } from "react-native";
 import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+
 
 const NewUserInfoScreen = ({ navigation }) => {
   const [age, setAge] = useState("");
@@ -43,6 +44,10 @@ const NewUserInfoScreen = ({ navigation }) => {
   };
 
   return (
+    <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
     <ScrollView contentContainerStyle={styles.container}>
       <SafeAreaView>
         <Text style={styles.title}>Create your Profile</Text>
@@ -75,6 +80,7 @@ const NewUserInfoScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

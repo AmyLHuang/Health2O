@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
-import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "@firebase/firestore";
+import { auth, firestore } from "../../FirebaseConfig";
 
 const SignupScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -11,9 +11,9 @@ const SignupScreen = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
-      await setDoc(doc(firebaseFirestore, "Users", uid), {
+      await setDoc(doc(firestore, "Users", uid), {
         username: username,
       });
       console.log("User created successfully!");

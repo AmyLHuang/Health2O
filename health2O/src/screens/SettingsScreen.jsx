@@ -21,6 +21,7 @@ const SettingsScreen = ({ navigation }) => {
       </SafeAreaView>
       <Button title="Edit Profile" onPress={() => navigation.navigate("EditProfile")}></Button>
       <Button title="About" onPress={() => navigation.navigate("About")}></Button>
+      <Button title="Change Password" onPress={() => navigation.navigate("ChangePassword")}></Button>
       <Button title="Sign Out" onPress={handleSignOut} />
     </View>
   );

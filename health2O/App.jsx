@@ -14,6 +14,7 @@ import ExerciseScreen from "./src/screens/ExerciseScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import EditProfileScreen from "./src/screens/EditProfileScreen";
 import AboutScreen from "./src/screens/AboutScreen";
+import ChangePasswordScreen from "./src/screens/ChangePasswordScreen";
 
 const options = {
   gestureEnabled: false,
@@ -39,6 +40,7 @@ const SettingsStackNavigator = () => (
     <SettingsStack.Screen name="Settings" component={SettingsScreen} />
     <SettingsStack.Screen name="EditProfile" component={EditProfileScreen} />
     <SettingsStack.Screen name="About" component={AboutScreen} />
+    <SettingsStack.Screen name="ChangePassword" component={ChangePasswordScreen} />
   </SettingsStack.Navigator>
 );
 

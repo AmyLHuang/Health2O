@@ -1,34 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, ScrollView, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
-import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import React from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faTint, faWalking, faBed, faWater, faHeartbeat } from "@fortawesome/free-solid-svg-icons";
+import useUserData from "../hooks/useUserData";
 
 const HomeScreen = ({ navigation }) => {
-  const [userData, setUserData] = useState("");
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const currentUserId = firebaseAuth.currentUser.uid;
-        const document = await getDoc(doc(firebaseFirestore, "Users", currentUserId));
-        if (document.exists()) {
-          setUserData(document.data());
-        } else {
-          console.log("No such document!");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
-      }
-    };
-
-    fetchUserData();
-  }, []); // Empty dependency array to run the effect only once on component mount
+  const userData = useUserData();
 
   return (
-    /* User data: JSON.stringify(userData) */
-
     <SafeAreaView edges={["right", "left", "top"]}>
       <ScrollView>
         <View style={styles.container}>

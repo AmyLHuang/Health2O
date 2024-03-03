@@ -1,13 +1,13 @@
 import React from "react";
-import { View, Text, SafeAreaView, Button, StyleSheet } from "react-native";
-import { firebaseAuth } from "../../FirebaseConfig";
+import { View, Text, SafeAreaView, Button, StyleSheet, TextInput, Alert } from "react-native";
 import { signOut } from "firebase/auth";
+import { auth } from "../../FirebaseConfig";
 
 const SettingsScreen = ({ navigation }) => {
   const handleSignOut = async () => {
     try {
-      await signOut(firebaseAuth);
-      console.log("User logged out successfully!");
+      await signOut(auth);
+      console.log("User signed out successfully!");
       navigation.navigate("Login");
     } catch (error) {
       console.error("SignOut error:", error.message);
@@ -19,7 +19,10 @@ const SettingsScreen = ({ navigation }) => {
       <SafeAreaView>
         <Text style={styles.title}>Settings Screen</Text>
       </SafeAreaView>
-      <Button style={(padding = 10)} title="Sign Out" onPress={handleSignOut} />
+      <Button title="Edit Profile" onPress={() => navigation.navigate("EditProfile")}></Button>
+      <Button title="About" onPress={() => navigation.navigate("About")}></Button>
+      <Button title="Change Password" onPress={() => navigation.navigate("ChangePassword")}></Button>
+      <Button title="Sign Out" onPress={handleSignOut} />
     </View>
   );
 };
@@ -39,5 +42,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     textAlign: "center",
+  },
+  input: {
+    width: "100%",
+    height: 54,
+    borderColor: "#D2D2D2",
+    borderWidth: 2,
+    marginBottom: 10,
+    paddingHorizontal: 8,
+    borderRadius: 15,
   },
 });

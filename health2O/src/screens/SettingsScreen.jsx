@@ -49,6 +49,13 @@ const SettingsScreen = ({ navigation }) => {
           />
         </View>
       </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>About Us</Text>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("About")}>
+          <MaterialIcons name="info" size={24} color="black" />
+          <Text style={styles.buttonText}>About Us</Text>
+        </TouchableOpacity>
+        </View>
     </SafeAreaView>
   );
 };

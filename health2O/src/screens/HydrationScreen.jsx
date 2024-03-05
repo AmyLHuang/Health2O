@@ -1,9 +1,10 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState } from "react";
 import { View, Text, Image, StyleSheet, Pressable, ScrollView, Animated, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, firestore } from "../../FirebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 import { Overlay } from "@rneui/base";
+import useUserData from "../hooks/useUserData";
 
 const profileImage = require("../../assets/health20.png");
 
@@ -25,17 +26,21 @@ class WaterBottle extends Component {
         useNativeDriver: false,
       }).start(() => {
         this.setState({ currentAmount: Math.round(waterLevel._value * this.props.target) });
+        this.updateHydrationData();
       });
     }
   };
 
+  updateHydrationData = async () => {
+    if (this.state.waterLevel._value >= 1) {
+      await setDoc(doc(firestore, "Users", auth.currentUser.uid), 
+      { hydration: {date: Math.floor(Date.now() / 1000), amount: this.props.target, unit: this.props.unit} }, 
+      { merge: true });
+    }
+  } 
+
   targetReached = () => {
     if (this.state.waterLevel._value >= 1) {
-      const userRef = doc(firebaseFirestore, "Users", firebaseAuth.currentUser.uid);
-      setDoc(userRef, 
-        {hydration: {date: Math.floor(Date.now() / 1000), amount: this.props.target, unit: this.props.unit}},
-        { merge: true }
-      );
       return "Congrats, you have reached today's target!";
     }
   }
@@ -66,6 +71,7 @@ const HydrationScreen = () => {
   const [amount, setAmount] = useState("");
   const [selectedUnit, setSelectedUnit] = useState(null);
   const animated = new Animated.Value(1);
+  const userData = useUserData();
 
   const convertDate = (seconds) => {
     const date = new Date(seconds * 1000);
@@ -79,29 +85,9 @@ const HydrationScreen = () => {
     if (userData.hydration == undefined) {
       return <Text>Loading...</Text>;
     }
-    console.log(userData.hydration);
     //return userData.hydration.map((item, index) => (<Text key={index}>{convertDate(item.date.seconds)}: {item.amount} {item.unit}{"\n"}</Text>));
     return <Text>{convertDate(userData.hydration.date)}: {userData.hydration.amount} {userData.hydration.unit}</Text>;
   };
-
-  const [userData, setUserData] = useState("");
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const currentUserId = firebaseAuth.currentUser.uid;
-        const document = await getDoc(doc(firebaseFirestore, "Users", currentUserId));
-        if (document.exists()) {
-          setUserData(document.data());
-        } else {
-          console.log("No such document!");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   const [visible, setVisible] = useState(false);
 

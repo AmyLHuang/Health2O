@@ -22,7 +22,7 @@ const useUserData = () => {
 
   useEffect(() => {
     fetchData();
-  }, [userData]);
+  }, []);
 
   return userData;
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView} from "react-native";
+import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import { Pedometer } from "expo-sensors";
 import Animated, { useSharedValue, useAnimatedProps, withTiming } from "react-native-reanimated";
 import SVG, { Circle } from "react-native-svg";
@@ -8,7 +8,9 @@ const CircleProgress = Animated.createAnimatedComponent(Circle);
 const radius = 35;
 const circumference = radius * Math.PI * 2;
 
+
 const stepGoal = 500; // STEPS GOAL
+
 
 const ExerciseScreen = () => {
   const [stepCount, setStepCount] = useState(0);

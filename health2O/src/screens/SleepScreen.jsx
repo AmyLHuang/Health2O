@@ -1,49 +1,23 @@
-import React from "react";
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView} from "react-native";
-import { BarChart, LineChart } from "react-native-chart-kit";
+import React, {useState} from "react";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView} from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
-let inBedTime = "10:30pm";
-let wakeUpTime = "08:00pm";
 
-const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const currentDay = new Date().getDay();
+let sleepHours = 8; // User sleeps for 8 hours
 
-let sleepHourLog = [5, 7, 6, 9, 10, 7];
-let bedTimeLog = [8, 11, 8, 10, 9, 8];
-
-const chartConfig = {
-    backgroundGradientFrom: "#FEFFED",
-    backgroundGradientTo: "#FEFFED",
-    color: (opacity = 1) => "#FFC374",
-    labelColor: (opacity = 1) => "black",
-    barPercentage: 0.5,
-    fillShadowGradientFrom: "#FFC374",
-    fillShadowGradientFromOpacity: 1,
-    fillShadowGradientTo: "#FFC374",
-    fillShadowGradientToOpacity: 1,
-    decimalPlaces: false,
-};
 
 const SleepScreen = () => {
-  const bedTimeLogData = {
-    labels: [dayNames[currentDay - 6], dayNames[currentDay - 5], dayNames[currentDay - 4], dayNames[currentDay - 3], dayNames[currentDay - 2], dayNames[currentDay - 1]],
-    datasets: [
-      {
-        data: bedTimeLog,
-      },
-    ],
+  const [wakeTime, setWakeTime] = useState(new Date());
+
+  let bedTime = new Date(wakeTime);
+  bedTime.setHours(wakeTime.getHours() - sleepHours);
+
+  let bedTimeString = bedTime.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+  let wakeTimeString = wakeTime.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+
+  const onChange = (event, selectedTime) => {
+    setWakeTime(selectedTime);
   };
-
-  const sleepLogData = {
-    labels: [dayNames[currentDay - 6], dayNames[currentDay - 5], dayNames[currentDay - 4], dayNames[currentDay - 3], dayNames[currentDay - 2], dayNames[currentDay - 1]],
-    datasets: [
-      {
-        data: sleepHourLog,
-      },
-    ],
-  };
-
-
 
   return (
     
@@ -60,38 +34,24 @@ const SleepScreen = () => {
         </View>
           
         <View style={styles.sleepTimeContainer}>
-          <Text style={styles.sleepText}>In-Bed Time{"\n\n"}{inBedTime}</Text>
+          <Text style={styles.sleepText}>In-Bed Time{"\n\n"}{bedTimeString}</Text>
           <View style={{height: "66%", width: 1, backgroundColor: "#EDEBF1"}}></View>
-          <Text style={styles.sleepText}>Wake Up Time{"\n\n"}{wakeUpTime}</Text>
+          <Text style={styles.sleepText}>Wake Up Time{"\n\n"}{wakeTimeString}</Text>
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Change sleep times</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Log Sleep</Text>
-          </TouchableOpacity>
-        </View>
-        
-        <Text style={styles.sleepChartTitle}>Bed Time</Text>
-        <LineChart
-          data={bedTimeLogData}
-          width={400}
-          height={300}
-          chartConfig={chartConfig}
-          segments={Math.max(...bedTimeLog) - Math.min(...bedTimeLog)}
-          bezier
-        />
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>Set preferred wake time</Text>
+          </View>
 
-        <Text style={styles.sleepChartTitle}>Sleep Hours</Text>
-        <BarChart
-          data={sleepLogData}
-          width={400}
-          height={300}
-          chartConfig={chartConfig}
-          segments={Math.max(...sleepHourLog) - Math.min(...sleepHourLog)}
-        />
+          <DateTimePicker
+            mode={"time"}
+            value={wakeTime}
+            is24Hour={true}
+            onChange={onChange}
+          />
+        </View>
+
       </ScrollView>
     </SafeAreaView>
     
@@ -170,13 +130,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     margin: 7,
   },
-
-  sleepChartTitle: {
-    fontSize: 30,
-    fontStyle: "bold",
-    margin: 10,
-  }
-
 });
 
 export default SleepScreen;

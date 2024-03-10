@@ -130,6 +130,24 @@ const HydrationScreen = () => {
     }).start();
   };
 
+  const recommendation = () => {
+    if (userData.height == undefined) {
+      return "Drinking water first thing in the morning can help get your metabolism running and give you an energizing effect. - Dr. Luckey";
+    }
+    const height = userData.height.ft * 12 + userData.height.in;
+    const activityLevel = userData.dailyStepGoal / 3000;
+    let weight = 0; 
+    if (userData.gender == "female") {
+      weight = 100 + 5 * (height - 60);
+    }
+    else {
+      weight = 106 + 6 * (height - 60);
+    }
+    const waterIntakeOunces = (weight * 0.5 + (activityLevel * 12)) | 0;
+    const waterIntakeLiters = (waterIntakeOunces / 33.814) | 0;
+    return "Based on your profile, your recommended water intake for today is " + waterIntakeOunces + " Ounces or " + waterIntakeLiters + " Liters.";
+  }
+
   return (
     <ScrollView style={styles.screen}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -144,7 +162,7 @@ const HydrationScreen = () => {
           <View style={styles.rec}>
             <Text style={styles.subtitle}>Recommendation</Text>
             <View style={styles.recbg}>
-              <Text style={styles.rectext}>Drinking water first thing in the morning can help get your metabolism running and give you an energizing effect. - Dr. Luckey</Text>
+              <Text style={styles.rectext}>{recommendation()}</Text>
             </View>
           </View>
 

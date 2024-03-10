@@ -5,8 +5,20 @@ import { auth, firestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { Overlay } from "@rneui/base";
 import useUserData from "../hooks/useUserData";
+import { BarChart } from "react-native-chart-kit";
 
 const profileImage = require("../../assets/health20.png");
+const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const day = daysOfWeek[new Date().getDay()];
+const chartConfig = {
+  backgroundGradientFrom: "#CBE9FF",
+  backgroundGradientFromOpacity: 1,
+  backgroundGradientTo: "#A5DEFF",
+  backgroundGradientToOpacity: 1,
+  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  barPercentage: 0.5,
+  useShadowColorFromDataset: false // optional
+};
 
 class WaterBottle extends Component {
   constructor(props) {
@@ -34,7 +46,7 @@ class WaterBottle extends Component {
   updateHydrationData = async () => {
     if (this.state.waterLevel._value >= 1) {
       await setDoc(doc(firestore, "Users", auth.currentUser.uid), 
-      { hydration: {date: Math.floor(Date.now() / 1000), amount: this.props.target, unit: this.props.unit} }, 
+      { hydration: {[day]: {date: Math.floor(Date.now() / 1000), amount: this.props.target, unit: this.props.unit}} }, 
       { merge: true });
     }
   } 
@@ -72,21 +84,28 @@ const HydrationScreen = () => {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const animated = new Animated.Value(1);
   const userData = useUserData();
-
-  const convertDate = (seconds) => {
-    const date = new Date(seconds * 1000);
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Add 1 to month because it's zero-based
-    const day = ('0' + date.getDate()).slice(-2);
-    return `${year}-${month}-${day}`;
-  }
   
   const formatData = () => {
     if (userData.hydration == undefined) {
       return <Text>Loading...</Text>;
     }
-    //return userData.hydration.map((item, index) => (<Text key={index}>{convertDate(item.date.seconds)}: {item.amount} {item.unit}{"\n"}</Text>));
-    return <Text>{convertDate(userData.hydration.date)}: {userData.hydration.amount} {userData.hydration.unit}</Text>;
+    const hydrationMap = userData.hydration;
+    const days = (Object.keys(hydrationMap).slice(day + 1) + Object.keys(hydrationMap).slice(0, day + 1)).split(",");
+    const amounts = days.map((day) => hydrationMap[day].amount);
+    const data = {
+      labels: days,
+      datasets: [
+        {
+          data: amounts
+        }
+      ]
+    };
+    return <BarChart
+      data={data}
+      width={280}
+      height={480}
+      chartConfig={chartConfig}
+      verticalLabelRotation={90} />
   };
 
   const [visible, setVisible] = useState(false);

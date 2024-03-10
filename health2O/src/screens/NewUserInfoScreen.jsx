@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, Button, StyleSheet, Alert, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
-import { firebaseAuth, firebaseFirestore } from "../../FirebaseConfig";
+import { View, TextInput, Text, StyleSheet, Alert, ScrollView, TouchableOpacity, SafeAreaView, Keyboard, KeyboardAvoidingView, Platform } from "react-native";
+import { auth, firestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+
 
 const NewUserInfoScreen = ({ navigation }) => {
   const [age, setAge] = useState("");
@@ -33,8 +34,9 @@ const NewUserInfoScreen = ({ navigation }) => {
         mm: bedTimeMin,
       },
     };
+
     try {
-      const docRef = await setDoc(doc(firebaseFirestore, "Users", firebaseAuth.currentUser.uid), info, { merge: true });
+      await setDoc(doc(firestore, "Users", auth.currentUser.uid), info, { merge: true });
       console.log("User data stored successfully!");
       navigation.navigate("Home");
     } catch (error) {
@@ -43,10 +45,15 @@ const NewUserInfoScreen = ({ navigation }) => {
   };
 
   return (
+    <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
     <ScrollView contentContainerStyle={styles.container}>
       <SafeAreaView>
         <Text style={styles.title}>Create your Profile</Text>
       </SafeAreaView>
+
       <Text style={styles.label}>Age</Text>
       <TextInput style={styles.input} placeholder="Enter your age" keyboardType="numeric" onChangeText={(text) => setAge(text.replace(/[^0-9]/g, ""))} value={age} />
 
@@ -75,6 +82,7 @@ const NewUserInfoScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

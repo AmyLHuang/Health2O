@@ -3,20 +3,24 @@ import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import { Pedometer } from "expo-sensors";
 import Animated, { useSharedValue, useAnimatedProps, withTiming } from "react-native-reanimated";
 import SVG, { Circle } from "react-native-svg";
+import useUserData from "../hooks/useUserData";
 
 const CircleProgress = Animated.createAnimatedComponent(Circle);
 const radius = 35;
 const circumference = radius * Math.PI * 2;
 
 
-const stepGoal = 500; // STEPS GOAL
-
-
 const ExerciseScreen = () => {
   const [stepCount, setStepCount] = useState(0);
   const [pastStepCount, setPastStepCount] = useState(0);
+  const userData = useUserData();
 
 
+  let stepGoal = 10000;
+  if (!isNaN(userData.dailyStepGoal)) {
+    stepGoal = userData.dailyStepGoal;
+  }
+   
   const getSteps = async () => {
     const isAvailable = await Pedometer.isAvailableAsync();
 
@@ -51,7 +55,24 @@ const ExerciseScreen = () => {
 
 
   const percentWalked = circumference-(circumference*(stepCount + pastStepCount)/stepGoal) % circumference;
-  const distanceWalked = (stepCount + pastStepCount) / 2000;
+  
+  let userHeight = 66;
+  if (userData.height == undefined) {
+    userHeight = (userData.heightFeet * 12) + userData.heightInches;
+  }
+  else {
+    userHeight = (userData.height.ft * 12) + userData.height.in;
+  }
+  
+  let stepLength = 0;
+  if (userData.gender == "Male") {
+    stepLength = userHeight * 0.415;
+  }
+  else {
+    stepLength = userHeight * 0.413;
+  }
+  
+  const distanceWalked = ((stepCount + pastStepCount) * stepLength / 63360).toFixed(3);
 
 
   return (

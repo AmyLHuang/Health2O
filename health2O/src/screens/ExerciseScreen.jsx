@@ -91,9 +91,6 @@ const ExerciseScreen = () => {
   const distanceWalked = ((stepCount * stepLength) / 63360).toFixed(3);
   const distanceToWalk = (((stepGoal - stepCount) * stepLength) / 63360).toFixed(3);
 
-  console.log(percentWalked);
-  console.log(circleFilled);
-  console.log(circumference);
   const recommendation = () => {
     let rec = "";
     const currentTime = new Date();

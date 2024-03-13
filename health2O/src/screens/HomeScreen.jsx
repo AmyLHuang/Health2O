@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
   const userData = useUserData();
 
   const sleepScore = Math.floor((40 / userData.sleepGoal) * 100);
-  const hydrateScore = 20;
+  const hydrateScore = Math.floor((userData.hydrationGoal / 3) * 100);
   const exerciseScore = Math.floor((4000 / userData.dailyStepGoal) * 100);
   const score = ((sleepScore + hydrateScore + exerciseScore) / 3).toFixed(1);
 
@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.sectionTitle}>Goals</Text>
         <View style={styles.boxContainer}>
           <Text style={[styles.goalText, { backgroundColor: "#F1ECEC" }]}>{userData.sleepGoal} hours </Text>
-          <Text style={[styles.goalText, { backgroundColor: "#DEEBFF" }]}>idk how much</Text>
+          <Text style={[styles.goalText, { backgroundColor: "#DEEBFF" }]}>{userData.hydrationGoal} Liters</Text>
           <Text style={[styles.goalText, { backgroundColor: "#E4F8EB" }]}>{userData.dailyStepGoal} steps </Text>
         </View>
 

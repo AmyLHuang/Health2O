@@ -80,10 +80,15 @@ class WaterBottle extends Component {
 }
 
 const HydrationScreen = () => {
-  const [amount, setAmount] = useState("");
-  const [selectedUnit, setSelectedUnit] = useState(null);
-  const animated = new Animated.Value(1);
   const userData = useUserData();
+  const [amount, setAmount] = useState(userData.hydrationGoal);
+  const [selectedUnit, setSelectedUnit] = useState("Liters");
+  const animated = new Animated.Value(1);
+
+  const updateHydrationGoalAmount = async (amount) => {
+    setAmount(amount);
+    await setDoc(doc(firestore, "Users", auth.currentUser.uid), { hydrationGoal: amount}, {merge: true});
+  }
 
   const formatData = () => {
     if (userData.hydration == undefined) {
@@ -139,7 +144,7 @@ const HydrationScreen = () => {
     }
     const waterIntakeOunces = (weight * 0.5 + activityLevel * 12) | 0;
     const waterIntakeLiters = (waterIntakeOunces / 33.814) | 0;
-    return "Based on your profile, your recommended water intake for today is " + waterIntakeOunces + " Ounces or " + waterIntakeLiters + " Liters.";
+    return "Based on your profile, your recommended water intake for today is " + waterIntakeLiters + " Liters.";
   };
 
   return (
@@ -167,7 +172,7 @@ const HydrationScreen = () => {
                     keyboardType="numeric"
                     placeholder="Amount"
                     value={amount}
-                    onChangeText={(amount) => setAmount(amount)}
+                    onChangeText={(amount) => updateHydrationGoalAmount(amount)}
                     onEndEditing={() => Keyboard.dismiss()}
                   />
                 </View>

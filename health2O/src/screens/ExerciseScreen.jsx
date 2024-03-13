@@ -9,18 +9,16 @@ const CircleProgress = Animated.createAnimatedComponent(Circle);
 const radius = 35;
 const circumference = radius * Math.PI * 2;
 
-
 const ExerciseScreen = () => {
   const [stepCount, setStepCount] = useState(0);
   const [pastStepCount, setPastStepCount] = useState(0);
   const userData = useUserData();
 
-
   let stepGoal = 10000;
   if (!isNaN(userData.dailyStepGoal)) {
     stepGoal = userData.dailyStepGoal;
   }
-   
+
   const getSteps = async () => {
     const isAvailable = await Pedometer.isAvailableAsync();
 
@@ -31,7 +29,7 @@ const ExerciseScreen = () => {
       endDate.setUTCHours(23, 59, 59, 999);
 
       const pastStep = await Pedometer.getStepCountAsync(startDate, endDate);
-      
+
       return Pedometer.watchStepCount((result) => {
         setStepCount(result.steps);
         if (pastStep) {
@@ -44,7 +42,7 @@ const ExerciseScreen = () => {
   const strokeOffset = useSharedValue(circumference);
   const animatedCircleProps = useAnimatedProps(() => {
     return {
-      stokeDashoffset: withTiming(strokeOffset.value, {duration: 2000}),
+      stokeDashoffset: withTiming(strokeOffset.value, { duration: 2000 }),
     };
   });
 
@@ -53,27 +51,23 @@ const ExerciseScreen = () => {
     return () => steps;
   }, []);
 
+  const percentWalked = circumference - (((circumference * (stepCount + pastStepCount)) / stepGoal) % circumference);
 
-  const percentWalked = circumference-(circumference*(stepCount + pastStepCount)/stepGoal) % circumference;
-  
   let userHeight = 66;
   if (userData.height == undefined) {
-    userHeight = (userData.heightFeet * 12) + userData.heightInches;
+    userHeight = userData.heightFeet * 12 + userData.heightInches;
+  } else {
+    userHeight = userData.height.ft * 12 + userData.height.in;
   }
-  else {
-    userHeight = (userData.height.ft * 12) + userData.height.in;
-  }
-  
+
   let stepLength = 0;
   if (userData.gender == "Male") {
     stepLength = userHeight * 0.415;
-  }
-  else {
+  } else {
     stepLength = userHeight * 0.413;
   }
-  
-  const distanceWalked = ((stepCount + pastStepCount) * stepLength / 63360).toFixed(3);
 
+  const distanceWalked = (((stepCount + pastStepCount) * stepLength) / 63360).toFixed(3);
 
   return (
     <SafeAreaView style={styles.background}>
@@ -88,13 +82,7 @@ const ExerciseScreen = () => {
       </View>
       <View>
         <SVG height="95%" width="100%" viewBox="0 0 100 100">
-          <Circle
-            cx="50%"
-            r={radius}
-            stroke="transparent"
-            strokeWidth="5"
-            fill="#93DCCA"
-          />
+          <Circle cx="50%" r={radius} stroke="transparent" strokeWidth="5" fill="#93DCCA" />
           <CircleProgress
             animatedProps={animatedCircleProps}
             cx="50%"
@@ -108,10 +96,15 @@ const ExerciseScreen = () => {
           />
         </SVG>
         <Text style={styles.stepDisplay}>{stepCount + pastStepCount}</Text>
-        <Text style={styles.stepGoal}>STEPS{"\n\n"}GOAL {stepGoal}</Text>
+        <Text style={styles.stepGoal}>
+          STEPS{"\n\n"}GOAL {stepGoal}
+        </Text>
       </View>
       <View style={styles.distanceContainer}>
-        <Text style={styles.distanceCounter}>Distance traveled{"\n"}{distanceWalked} miles</Text>
+        <Text style={styles.distanceCounter}>
+          Distance traveled{"\n"}
+          {distanceWalked} miles
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -123,8 +116,12 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 36,
-    marginLeft: 10,
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#EC268F",
+    marginBottom: 20,
+    textAlign: "center",
+    marginTop: 18,
   },
 
   recommendBox: {
@@ -180,7 +177,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     borderRadius: 10,
-    bottom:  220,
+    bottom: 220,
     padding: 15,
   },
 
@@ -189,8 +186,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-
 });
-
 
 export default ExerciseScreen;

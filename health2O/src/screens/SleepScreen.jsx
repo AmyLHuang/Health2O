@@ -1,10 +1,8 @@
-import React, {useState} from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView} from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
-
+import React, { useState } from "react";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 let sleepHours = 8; // User sleeps for 8 hours
-
 
 const SleepScreen = () => {
   const [wakeTime, setWakeTime] = useState(new Date());
@@ -12,15 +10,14 @@ const SleepScreen = () => {
   let bedTime = new Date(wakeTime);
   bedTime.setHours(wakeTime.getHours() - sleepHours);
 
-  let bedTimeString = bedTime.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
-  let wakeTimeString = wakeTime.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+  let bedTimeString = bedTime.toLocaleTimeString().replace(/(.*)\D\d+/, "$1");
+  let wakeTimeString = wakeTime.toLocaleTimeString().replace(/(.*)\D\d+/, "$1");
 
   const onChange = (event, selectedTime) => {
     setWakeTime(selectedTime);
   };
 
   return (
-    
     <SafeAreaView style={styles.background}>
       <ScrollView>
         <View>
@@ -32,11 +29,17 @@ const SleepScreen = () => {
             <Text style={styles.recommendText}>You should sleep at 10 pm if you are planning to wake up at 6 am!</Text>
           </View>
         </View>
-          
+
         <View style={styles.sleepTimeContainer}>
-          <Text style={styles.sleepText}>In-Bed Time{"\n\n"}{bedTimeString}</Text>
-          <View style={{height: "66%", width: 1, backgroundColor: "#EDEBF1"}}></View>
-          <Text style={styles.sleepText}>Wake Up Time{"\n\n"}{wakeTimeString}</Text>
+          <Text style={styles.sleepText}>
+            In-Bed Time{"\n\n"}
+            {bedTimeString}
+          </Text>
+          <View style={{ height: "66%", width: 1, backgroundColor: "#EDEBF1" }}></View>
+          <Text style={styles.sleepText}>
+            Wake Up Time{"\n\n"}
+            {wakeTimeString}
+          </Text>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -44,17 +47,10 @@ const SleepScreen = () => {
             <Text style={styles.buttonText}>Set preferred wake time</Text>
           </View>
 
-          <DateTimePicker
-            mode={"time"}
-            value={wakeTime}
-            is24Hour={true}
-            onChange={onChange}
-          />
+          <DateTimePicker mode={"time"} value={wakeTime} is24Hour={true} onChange={onChange} />
         </View>
-
       </ScrollView>
     </SafeAreaView>
-    
   );
 };
 
@@ -65,8 +61,12 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 36,
-    marginLeft: 10,
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#EC268F",
+    marginBottom: 20,
+    textAlign: "center",
+    marginTop: 18,
   },
 
   recommendBox: {

@@ -87,44 +87,32 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.sectionTitle}>Goals</Text>
+        <Text style={styles.sectionTitle}>My Goals</Text>
         <View style={styles.boxContainer}>
           <Text style={[styles.goalText, { backgroundColor: "#F1ECEC" }]}>{userData.sleepGoal} hours </Text>
           <Text style={[styles.goalText, { backgroundColor: "#DEEBFF" }]}>{userData.hydrationGoal} Liters</Text>
           <Text style={[styles.goalText, { backgroundColor: "#E4F8EB" }]}>{userData.dailyStepGoal} steps </Text>
         </View>
 
-        <Text style={styles.sectionTitle}>My Progress</Text>
+        <Text style={styles.sectionTitle}>My Daily Progress</Text>
         <View style={styles.boxContainer}>
-          <ProgressCircle radius={45} percentage={sleepScore} color={"orange"} />
-          <ProgressCircle radius={45} percentage={hydrateScore} color={"blue"} />
-          <ProgressCircle radius={45} percentage={exerciseScore} color={"green"} />
+          <View>
+            <ProgressCircle radius={45} percentage={sleepScore} color={"orange"} />
+            <Text style={{ textAlign: "center" }}>Sleep</Text>
+          </View>
+          <View>
+            <ProgressCircle radius={45} percentage={hydrateScore} color={"blue"} />
+            <Text style={{ textAlign: "center" }}>Hydrate</Text>
+          </View>
+          <View>
+            <ProgressCircle radius={45} percentage={exerciseScore} color={"green"} />
+            <Text style={{ textAlign: "center" }}>Exercise</Text>
+          </View>
         </View>
-
-        {/* <Text style={styles.sectionTitle}>My Activity</Text>
-        <View style={styles.activitySection}>
-          <View style={styles.activityRow}>
-            <ActivityBox icon={faBed} label="Sleep" value="8 hours" />
-          </View>
-          <View style={styles.activityRow}>
-            <ActivityBox icon={faTint} label="Hydrate" value="0.8 liters" />
-          </View>
-          <View style={styles.activityRow}>
-            <ActivityBox icon={faWalking} label="Steps" value="600" />
-          </View>
-        </View> */}
       </SafeAreaView>
     </ScrollView>
   );
 };
-
-// const ActivityBox = ({ icon, label, value }) => (
-//   <View style={styles.activityBox}>
-//     <FontAwesomeIcon icon={icon} size={20} style={styles.activityIcon} />
-//     <Text style={styles.activityLabel}>{label}</Text>
-//     <Text style={styles.activityValue}>{value}</Text>
-//   </View>
-// );
 
 const styles = StyleSheet.create({
   container: {
@@ -170,55 +158,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 25,
   },
-  activitySection: {
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-  },
-
-  activityRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 15,
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 6,
-  },
-
-  activityBox: {
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-    marginHorizontal: 10,
-    backgroundColor: "#F7BFD8",
-    borderRadius: 25,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-  },
-
-  activityIcon: {
-    marginBottom: 10,
-    fontSize: 30,
-    color: "#EC268F",
-  },
-
-  activityLabel: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#091F44",
-  },
-
-  activityValue: {
-    fontSize: 16,
-    color: "#333",
-  },
   scoreBox: {
     backgroundColor: "white",
     padding: 10,
@@ -226,7 +165,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
     borderRadius: 25,
   },
-
   modalView: {
     justifyContent: "center",
     alignItems: "center",
@@ -262,6 +200,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  goalText: {
+    padding: 10,
   },
 });
 

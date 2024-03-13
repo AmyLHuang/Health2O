@@ -5,7 +5,7 @@ const ProgressCircle = ({ radius, percentage, color }) => (
     radius={radius}
     value={percentage}
     valueSuffix={"%"}
-    progressValueColor={"#EC268F"}
+    progressValueColor={"black"}
     activeStrokeColor={color}
     inActiveStrokeColor={color}
     inActiveStrokeOpacity={0.2}

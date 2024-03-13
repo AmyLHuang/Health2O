@@ -8,7 +8,7 @@ import useUserData from "../hooks/useUserData";
 import { BarChart } from "react-native-chart-kit";
 
 const profileImage = require("../../assets/health20.png");
-const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const day = daysOfWeek[new Date().getDay()];
 const chartConfig = {
   backgroundGradientFrom: "#CBE9FF",
@@ -17,7 +17,7 @@ const chartConfig = {
   backgroundGradientToOpacity: 1,
   color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   barPercentage: 0.5,
-  useShadowColorFromDataset: false // optional
+  useShadowColorFromDataset: false, // optional
 };
 
 class WaterBottle extends Component {
@@ -25,7 +25,7 @@ class WaterBottle extends Component {
     super(props);
     this.state = {
       waterLevel: new Animated.Value(0), // current water level
-      currentAmount: 0
+      currentAmount: 0,
     };
   }
 
@@ -45,17 +45,15 @@ class WaterBottle extends Component {
 
   updateHydrationData = async () => {
     if (this.state.waterLevel._value >= 1) {
-      await setDoc(doc(firestore, "Users", auth.currentUser.uid), 
-      { hydration: {[day]: {date: Math.floor(Date.now() / 1000), amount: this.props.target, unit: this.props.unit}} }, 
-      { merge: true });
+      await setDoc(doc(firestore, "Users", auth.currentUser.uid), { hydration: { [day]: { date: Math.floor(Date.now() / 1000), amount: this.props.target, unit: this.props.unit } } }, { merge: true });
     }
-  } 
+  };
 
   targetReached = () => {
     if (this.state.waterLevel._value >= 1) {
       return "Congrats, you have reached today's target!";
     }
-  }
+  };
 
   render() {
     const waterLevel = this.state.waterLevel.interpolate({
@@ -63,15 +61,17 @@ class WaterBottle extends Component {
       outputRange: ["0%", "100%"],
     });
 
-    const {currentAmount} = this.state;
+    const { currentAmount } = this.state;
 
     return (
       <View style={styles.container}>
         <TouchableOpacity onPress={this.fillBottle}>
           <View style={styles.bottle}>
             <Animated.View style={[styles.water, { height: waterLevel }]} />
-            <Text style={styles.currentAmountText}>{currentAmount}/{this.props.target} {this.props.unit}</Text>
-            <Text style={[styles.currentAmountText, {top: "10%", color: "white"}]}>{this.targetReached()}</Text>
+            <Text style={styles.currentAmountText}>
+              {currentAmount}/{this.props.target} {this.props.unit}
+            </Text>
+            <Text style={[styles.currentAmountText, { top: "10%", color: "white" }]}>{this.targetReached()}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -84,7 +84,7 @@ const HydrationScreen = () => {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const animated = new Animated.Value(1);
   const userData = useUserData();
-  
+
   const formatData = () => {
     if (userData.hydration == undefined) {
       return <Text>Loading...</Text>;
@@ -96,16 +96,11 @@ const HydrationScreen = () => {
       labels: days,
       datasets: [
         {
-          data: amounts
-        }
-      ]
+          data: amounts,
+        },
+      ],
     };
-    return <BarChart
-      data={data}
-      width={280}
-      height={480}
-      chartConfig={chartConfig}
-      verticalLabelRotation={90} />
+    return <BarChart data={data} width={280} height={480} chartConfig={chartConfig} verticalLabelRotation={90} />;
   };
 
   const [visible, setVisible] = useState(false);
@@ -136,27 +131,23 @@ const HydrationScreen = () => {
     }
     const height = userData.height.ft * 12 + userData.height.in;
     const activityLevel = userData.dailyStepGoal / 3000;
-    let weight = 0; 
+    let weight = 0;
     if (userData.gender == "female") {
       weight = 100 + 5 * (height - 60);
-    }
-    else {
+    } else {
       weight = 106 + 6 * (height - 60);
     }
-    const waterIntakeOunces = (weight * 0.5 + (activityLevel * 12)) | 0;
+    const waterIntakeOunces = (weight * 0.5 + activityLevel * 12) | 0;
     const waterIntakeLiters = (waterIntakeOunces / 33.814) | 0;
     return "Based on your profile, your recommended water intake for today is " + waterIntakeOunces + " Ounces or " + waterIntakeLiters + " Liters.";
-  }
+  };
 
   return (
     <ScrollView style={styles.screen}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View>
           <SafeAreaView>
-            <View style={styles.header}>
-              <Text style={styles.title}>Hydration</Text>
-              <Image style={styles.pfp} source={profileImage} />
-            </View>
+            <Text style={styles.title}>Hydration</Text>
           </SafeAreaView>
 
           <View style={styles.rec}>
@@ -206,15 +197,14 @@ const HydrationScreen = () => {
                   <Text style={[styles.subtitle]}>Hydration Log</Text>
                 </Animated.View>
               </Pressable>
-              <Overlay isVisible={visible} onBackdropPress={toggleOverlay} 
-              overlayStyle={{backgroundColor: "white", width: 300, height: 500}}>
+              <Overlay isVisible={visible} onBackdropPress={toggleOverlay} overlayStyle={{ backgroundColor: "white", width: 300, height: 500 }}>
                 <Text>{formatData()}</Text>
               </Overlay>
             </View>
           </View>
 
           <View style={styles.progressBar}>
-            <WaterBottle target={amount} unit={selectedUnit}/>
+            <WaterBottle target={amount} unit={selectedUnit} />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -238,8 +228,12 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 36,
-    marginLeft: 10,
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#EC268F",
+    marginBottom: 20,
+    textAlign: "center",
+    marginTop: 18,
   },
 
   pfp: {
@@ -340,10 +334,10 @@ const styles = StyleSheet.create({
   },
 
   currentAmountText: {
-    position: 'absolute',
-    bottom: '50%',
-    alignSelf: 'center',
-    color: 'black',
-    fontWeight: 'bold',
+    position: "absolute",
+    bottom: "50%",
+    alignSelf: "center",
+    color: "black",
+    fontWeight: "bold",
   },
 });

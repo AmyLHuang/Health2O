@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform} from "react-native";
+import { View, Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../../FirebaseConfig";
 import useUserData from "../hooks/useUserData";
 
 const EditProfileScreen = ({ navigation }) => {
-  const [newUsername, setNewUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [heightFt, setHeightFt] = useState("");
@@ -15,25 +15,25 @@ const EditProfileScreen = ({ navigation }) => {
   const [bedTimeHour, setBedTimeHour] = useState("");
   const [bedTimeMin, setBedTimeMin] = useState("");
   const userData = useUserData();
-  
-console.log(userData)
-useEffect(() => {
-  if(userData) {
-    setNewUsername(userData.username || "");
-    setGender(userData.gender || "");
-    setAge(userData.age ? String(userData.age) : "");
-    setHeightFt(userData.height ? String(userData.height.ft) : ""); 
-    setHeightIn(userData.height ? String(userData.height.in) : "");
-    setDailySleepGoal(userData.sleepGoal ? String(userData.sleepGoal) : "");
-    setBedTimeHour(userData.bedtime ? String(userData.bedtime.hh) : "");
-    setBedTimeMin(userData.bedtime ? String(userData.bedtime.mm) : "");
-  }
-}, [userData]);
 
+  console.log(userData);
+  useEffect(() => {
+    if (userData) {
+      setUsername(userData.username || "");
+      setGender(userData.gender || "");
+      setAge(userData.age ? String(userData.age) : "");
+      setHeightFt(userData.height ? String(userData.height.ft) : "");
+      setHeightIn(userData.height ? String(userData.height.in) : "");
+      setDailySleepGoal(userData.sleepGoal ? String(userData.sleepGoal) : "");
+      setStepGoal(userData.dailyStepGoal ? String(userData.dailyStepGoal) : "");
+      setBedTimeHour(userData.bedtime ? String(userData.bedtime.hh) : "");
+      setBedTimeMin(userData.bedtime ? String(userData.bedtime.mm) : "");
+    }
+  }, [userData]);
 
   const handleUpdatePress = async () => {
-     // Display a yes/no confirmation alert
-     Alert.alert("Confirmation", `Are you sure you want to update profile?`, [
+    // Display a yes/no confirmation alert
+    Alert.alert("Confirmation", `Are you sure you want to update profile?`, [
       { text: "No", style: "cancel" },
       {
         text: "Yes",
@@ -46,6 +46,7 @@ useEffect(() => {
   };
 
   const info = {
+    username: username,
     age: parseInt(age),
     height: {
       ft: parseInt(heightFt),
@@ -59,6 +60,7 @@ useEffect(() => {
       mm: bedTimeMin,
     },
   };
+
   const updateFirestoreDocument = async () => {
     try {
       // Update the value in the specified document
@@ -71,97 +73,44 @@ useEffect(() => {
 
   return (
     <SafeAreaView style={styles.container}>
-    <KeyboardAvoidingView 
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-    
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>← Go Back</Text>
-        </TouchableOpacity>
-        
-        <Text style={styles.title}>Edit Profile</Text>
-        
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Text style={styles.backButtonText}>← Go Back</Text>
+          </TouchableOpacity>
 
-        {/* Username Input */}
-        <TextInput 
-          style={styles.input} 
-          onChangeText={text => setNewUsername(text)}
-          value={newUsername} 
-          
-        />
+          <Text style={styles.title}>Edit Profile</Text>
 
-        {/* Gender Input */}
-        <TextInput 
-          style={styles.input} 
-          onChangeText={text => setGender(text)}
-          value={gender}
-           
-        />
+          {/* Username Input */}
+          <TextInput style={styles.input} onChangeText={(text) => setUsername(text)} value={username} />
 
-        {/* Age Input */}
-        <TextInput 
-          style={styles.input} 
-          onChangeText={text => setAge(text)}
-          value={age}
-          
-        />
+          {/* Gender Input */}
+          <TextInput style={styles.input} onChangeText={(text) => setGender(text)} value={gender} />
 
-<View style={styles.heightInputContainer}>
-  <TextInput 
-    style={[styles.input, styles.heightInput]} 
-    onChangeText={text => setHeightFt(text)}
-    value={heightFt}
-    placeholder="Feet"
-    keyboardType="numeric"
-    
-  />
-  <TextInput 
-    style={[styles.input, styles.heightInput]} 
-    onChangeText={text => setHeightIn(text)}
-    value={heightIn}
-    placeholder="Inches"
-    keyboardType="numeric"
-  />
-</View>
+          {/* Age Input */}
+          <TextInput style={styles.input} onChangeText={(text) => setAge(text)} value={age} />
 
-        {/* Daily Sleep Goal Input */}
-        <TextInput 
-          style={styles.input} 
-          value={dailySleepGoal}
-          onChangeText={text => setDailySleepGoal(text)}
-          keyboardType="numeric"
-          
-        />
+          <View style={styles.heightInputContainer}>
+            <TextInput style={[styles.input, styles.heightInput]} onChangeText={(text) => setHeightFt(text)} value={heightFt} placeholder="Feet" keyboardType="numeric" />
+            <TextInput style={[styles.input, styles.heightInput]} onChangeText={(text) => setHeightIn(text)} value={heightIn} placeholder="Inches" keyboardType="numeric" />
+          </View>
 
-        {/* Bedtime Input */}
-<View style={styles.bedtimeInputContainer}>
-  <TextInput 
-    style={[styles.input, styles.bedtimeInput]} 
-    onChangeText={text => setBedTimeHour(text)}
-    value={bedTimeHour}
-    placeholder="Hour"
-    keyboardType="numeric"
-  />
-  <TextInput 
-    style={[styles.input, styles.bedtimeInput]} 
-    onChangeText={text => setBedTimeMin(text)}
-    value={bedTimeMin}
-    placeholder="Minute"
-    keyboardType="numeric"
-  />
-</View>
+          {/* Daily Sleep Goal Input */}
+          <TextInput style={styles.input} value={dailySleepGoal} onChangeText={(text) => setDailySleepGoal(text)} keyboardType="numeric" />
 
+          {/* Bedtime Input */}
+          <View style={styles.bedtimeInputContainer}>
+            <TextInput style={[styles.input, styles.bedtimeInput]} onChangeText={(text) => setBedTimeHour(text)} value={bedTimeHour} placeholder="Hour" keyboardType="numeric" />
+            <TextInput style={[styles.input, styles.bedtimeInput]} onChangeText={(text) => setBedTimeMin(text)} value={bedTimeMin} placeholder="Minute" keyboardType="numeric" />
+          </View>
 
-        {/* Update Button */}
-        <TouchableOpacity onPress={handleUpdatePress} style={styles.updateButton}>
-          <Text style={styles.updateButtonText}>Update Profile</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
-  </SafeAreaView>
+          {/* Update Button */}
+          <TouchableOpacity onPress={handleUpdatePress} style={styles.updateButton}>
+            <Text style={styles.updateButtonText}>Update Profile</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -171,11 +120,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
   },
   scrollContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: 20,
   },
   backButton: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     marginBottom: 10,
   },
   backButtonText: {
@@ -189,46 +138,45 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   input: {
-    width: '100%',
-    backgroundColor: '#fff',
+    width: "100%",
+    backgroundColor: "#fff",
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 10,
     marginBottom: 20,
     fontSize: 16,
-    borderColor: '#D2D2D2',
+    borderColor: "#D2D2D2",
     borderWidth: 1,
   },
   updateButton: {
     backgroundColor: "#EC268F",
     padding: 15,
     borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginTop: 20,
   },
   updateButtonText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   heightInputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
   heightInput: {
-    width: '48%', 
+    width: "48%",
   },
   bedtimeInputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
   bedtimeInput: {
-    width: '48%', 
+    width: "48%",
   },
-  
 });
 
 export default EditProfileScreen;

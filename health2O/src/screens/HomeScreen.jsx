@@ -1,101 +1,144 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Modal, Pressable } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faSearch, faTint, faWalking, faBed, faWater, faHeartbeat } from "@fortawesome/free-solid-svg-icons";
+import { faTint, faWalking, faBed, faHeartbeat, faDirections } from "@fortawesome/free-solid-svg-icons";
 import useUserData from "../hooks/useUserData";
+import ProgressCircle from "../components/ProgressCircle";
 
 const HomeScreen = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const userData = useUserData();
 
+  const sleepScore = Math.floor((40 / userData.sleepGoal) * 100);
+  const hydrateScore = 20;
+  const exerciseScore = Math.floor((4000 / userData.dailyStepGoal) * 100);
+  const score = ((sleepScore + hydrateScore + exerciseScore) / 3).toFixed(1);
+
+  const getGoalStatus = () => {
+    if (score == 100) {
+      return "Perfect";
+    } else if (score >= 80) {
+      return "Excellent";
+    } else if (score >= 60) {
+      return "Good";
+    } else if (score >= 40) {
+      return "Adequate";
+    } else {
+      return "Time to get started";
+    }
+  };
+
   return (
-    <SafeAreaView edges={["right", "left", "top"]}>
-      <ScrollView>
-        <View style={styles.container}>
-          <Text style={styles.greeting}>👋 Hi {userData.username}!</Text>
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>👋 Welcome {userData.username}!</Text>
 
-          {/* <View style={styles.searchSection}>
-            <TextInput placeholder="Search..." style={styles.searchInput} />
-            <TouchableOpacity style={styles.searchButton}>
-              <FontAwesomeIcon icon={faSearch} />
-            </TouchableOpacity>
-          </View> */}
-
-          <View style={styles.boxContainer}>
-            <TouchableOpacity style={[styles.box, { backgroundColor: "#F1ECEC" }]} onPress={() => navigation.navigate("Sleep")}>
-              <FontAwesomeIcon icon={faBed} size={24} color="#091F44" />
-              <Text style={styles.boxText}>Sleep</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.box, { backgroundColor: "#DEEBFF" }]} onPress={() => navigation.navigate("Hydration")}>
-              <FontAwesomeIcon icon={faTint} size={24} color="#091F44" />
-              <Text style={styles.boxText}>Hydrate</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.box, { backgroundColor: "#E4F8EB" }]} onPress={() => navigation.navigate("Exercise")}>
-              <FontAwesomeIcon icon={faWalking} size={24} color="#091F44" />
-              <Text style={styles.boxText}>Exercise</Text>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.modalView}>
+            <Text style={[styles.modalTextTitle]}>Score Ratings</Text>
+            <Text style={styles.modalText}>80%-100% = Perfect</Text>
+            <Text style={styles.modalText}>60%-79% = Excellent</Text>
+            <Text style={styles.modalText}>40%-59% = Adaquate</Text>
+            <Text style={styles.modalText}>0%-39% = Need to get started</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.activityTitle}>My Activity</Text>
-          <View style={styles.activitySection}>
-            <View style={styles.activityRow}>
-              <ActivityBox icon={faBed} label="Sleep" value="8 hours" />
-            </View>
-            <View style={styles.activityRow}>
-              <ActivityBox icon={faTint} label="Hydrate" value="0.8 liters" />
-            </View>
-            <View style={styles.activityRow}>
-              <ActivityBox icon={faWalking} label="Steps" value="600" />
-            </View>
+        </Modal>
+
+        <View style={styles.scoreBox}>
+          <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 5 }}>Overall Score</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontSize: 40 }}>{score}</Text>
+            <Text>out of 100</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text>Rating: {getGoalStatus()}</Text>
+            <TouchableOpacity style={{ marginLeft: 3, marginTop: 2 }} onPress={() => setModalVisible(true)}>
+              <FontAwesome5 name="info-circle" size={14} color="black" />
+            </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+
+        <Text style={styles.sectionTitle}>My Activities</Text>
+        <View style={styles.boxContainer}>
+          <TouchableOpacity style={[styles.box, { backgroundColor: "#F1ECEC" }]} onPress={() => navigation.navigate("Sleep")}>
+            <FontAwesomeIcon icon={faBed} size={24} color="#091F44" />
+            <Text style={styles.boxText}>Sleep</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.box, { backgroundColor: "#DEEBFF" }]} onPress={() => navigation.navigate("Hydration")}>
+            <FontAwesomeIcon icon={faTint} size={24} color="#091F44" />
+            <Text style={styles.boxText}>Hydrate</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.box, { backgroundColor: "#E4F8EB" }]} onPress={() => navigation.navigate("Exercise")}>
+            <FontAwesomeIcon icon={faWalking} size={24} color="#091F44" />
+            <Text style={styles.boxText}>Exercise</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.sectionTitle}>Goals</Text>
+        <View style={styles.boxContainer}>
+          <Text style={[styles.goalText, { backgroundColor: "#F1ECEC" }]}>{userData.sleepGoal} hours </Text>
+          <Text style={[styles.goalText, { backgroundColor: "#DEEBFF" }]}>idk how much</Text>
+          <Text style={[styles.goalText, { backgroundColor: "#E4F8EB" }]}>{userData.dailyStepGoal} steps </Text>
+        </View>
+
+        <Text style={styles.sectionTitle}>My Progress</Text>
+        <View style={styles.boxContainer}>
+          <ProgressCircle radius={45} percentage={sleepScore} color={"orange"} />
+          <ProgressCircle radius={45} percentage={hydrateScore} color={"blue"} />
+          <ProgressCircle radius={45} percentage={exerciseScore} color={"green"} />
+        </View>
+
+        {/* <Text style={styles.sectionTitle}>My Activity</Text>
+        <View style={styles.activitySection}>
+          <View style={styles.activityRow}>
+            <ActivityBox icon={faBed} label="Sleep" value="8 hours" />
+          </View>
+          <View style={styles.activityRow}>
+            <ActivityBox icon={faTint} label="Hydrate" value="0.8 liters" />
+          </View>
+          <View style={styles.activityRow}>
+            <ActivityBox icon={faWalking} label="Steps" value="600" />
+          </View>
+        </View> */}
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
-const ActivityBox = ({ icon, label, value }) => (
-  <View style={styles.activityBox}>
-    <FontAwesomeIcon icon={icon} size={20} style={styles.activityIcon} />
-    <Text style={styles.activityLabel}>{label}</Text>
-    <Text style={styles.activityValue}>{value}</Text>
-  </View>
-);
+// const ActivityBox = ({ icon, label, value }) => (
+//   <View style={styles.activityBox}>
+//     <FontAwesomeIcon icon={icon} size={20} style={styles.activityIcon} />
+//     <Text style={styles.activityLabel}>{label}</Text>
+//     <Text style={styles.activityValue}>{value}</Text>
+//   </View>
+// );
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: "#f2f2f2",
+    margin: 16,
   },
-  greeting: {
+  title: {
     fontSize: 26,
     fontWeight: "bold",
     color: "#EC268F",
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: "center",
-  },
-  searchSection: {
-    flexDirection: "row",
-    marginBottom: 20,
-    backgroundColor: "#fff",
-    borderRadius: 30,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  searchInput: {
-    flex: 1,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 30,
-    fontSize: 16,
-  },
-  searchButton: {
-    alignSelf: "center",
-    paddingHorizontal: 10,
+    marginTop: 18,
   },
   boxContainer: {
     flexDirection: "row",
@@ -122,11 +165,10 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: "center",
   },
-  activityTitle: {
+  sectionTitle: {
     fontSize: 22,
     fontWeight: "bold",
-
-    marginTop: "5%",
+    marginTop: 25,
   },
   activitySection: {
     paddingVertical: 15,
@@ -176,6 +218,50 @@ const styles = StyleSheet.create({
   activityValue: {
     fontSize: 16,
     color: "#333",
+  },
+  scoreBox: {
+    backgroundColor: "white",
+    padding: 10,
+    marginVertical: 20,
+    marginHorizontal: 50,
+    borderRadius: 25,
+  },
+
+  modalView: {
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 45,
+    marginTop: 100,
+    backgroundColor: "#f8f8ff",
+    borderRadius: 25,
+    padding: 35,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+  },
+  modalText: {
+    margin: 2,
+  },
+  modalTextTitle: {
+    textAlign: "center",
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+    marginBottom: 20,
+  },
+  closeButton: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: "#EC268F",
+    marginTop: 25,
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

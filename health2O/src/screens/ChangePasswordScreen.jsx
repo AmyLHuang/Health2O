@@ -7,14 +7,21 @@ const ChangePasswordScreen = ({ navigation }) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
+  const [msg, setMsg] = useState("");
 
   const isValid = () => {
     if (!oldPassword || !newPassword || !newPassword2) {
-      console.log("Didnt fill out all fields");
+      setMsg("Error: Didnt fill out all fields");
+      // console.log("Didnt fill out all fields");
       return false;
     }
     if (newPassword !== newPassword2) {
-      console.log("New passwords do not match.");
+      setMsg("Error: New passwords do not match.");
+      // console.log("New passwords do not match.");
+      return false;
+    }
+    if (newPassword == oldPassword) {
+      setMsg("Error: old password field and new password field cannot be the same");
       return false;
     }
     return true;
@@ -26,20 +33,20 @@ const ChangePasswordScreen = ({ navigation }) => {
         const credential = EmailAuthProvider.credential(auth.currentUser.email, oldPassword);
         await reauthenticateWithCredential(auth.currentUser, credential);
         await updatePassword(auth.currentUser, newPassword);
-        Alert.alert("Successfully updated password to", newPassword);
-        console.log("successfully changed password to", newPassword);
+        setMsg("Successfully updated password!");
       } catch (error) {
-        console.error("error:", error.message);
+        setMsg("Error: Inputed incorrect password");
       }
     }
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView>
-        <Text style={styles.title}>Update Password</Text>
-      </SafeAreaView>
-      <Button title="Go Back" onPress={() => navigation.goBack()}></Button>
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Text style={styles.backButtonText}>← Go Back</Text>
+      </TouchableOpacity>
+      <Text style={styles.title}>Update Password</Text>
+
       <View style={styles.inputContainer}>
         <TextInput style={styles.input} value={oldPassword} onChangeText={setOldPassword} placeholder="Enter Old Password" autoCapitalize="none" />
         <TextInput style={styles.input} value={newPassword} onChangeText={setNewPassword} placeholder="Enter New Password" autoCapitalize="none" />
@@ -48,7 +55,8 @@ const ChangePasswordScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleUpdatePassword}>
         <Text style={styles.buttonText}>Update Password</Text>
       </TouchableOpacity>
-    </View>
+      <Text style={styles.msg}>{msg}</Text>
+    </SafeAreaView>
   );
 };
 
@@ -57,14 +65,22 @@ export default ChangePasswordScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#f2f2f2",
     alignItems: "center",
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginBottom: 10,
+    padding: 20,
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: "#EC268F",
   },
   title: {
     fontSize: 26,
     fontWeight: "bold",
     color: "#EC268F",
-    marginTop: 20,
     marginBottom: 20,
     textAlign: "center",
   },
@@ -73,6 +89,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
+    backgroundColor: "#fff",
     width: "100%",
     height: 54,
     borderColor: "#D2D2D2",
@@ -94,5 +111,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 16,
+  },
+  msg: {
+    color: "red",
+    margin: 20,
+    fontSize: 15,
   },
 });

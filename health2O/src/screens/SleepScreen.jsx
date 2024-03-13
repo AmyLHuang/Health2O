@@ -1,74 +1,61 @@
-import React, {useState} from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity} from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { useState } from "react";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import useUserData from "../hooks/useUserData";
-
 
 const SleepScreen = () => {
   const userData = useUserData();
   const [wakeTime, setWakeTime] = useState(new Date(0, 0, 0, 7, 0));
   const [showTimePicker, setShowTimePicker] = useState(false);
-  
+
   let sleepHours = userData.sleepGoal;
   let rec = "";
 
   const bedTime = new Date(wakeTime);
   bedTime.setHours(wakeTime.getHours() - sleepHours, wakeTime.getMinutes());
 
-  let bedTimeString = bedTime.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
-  let wakeTimeString = wakeTime.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+  let bedTimeString = bedTime.toLocaleTimeString().replace(/(.*)\D\d+/, "$1");
+  let wakeTimeString = wakeTime.toLocaleTimeString().replace(/(.*)\D\d+/, "$1");
 
   const onChange = (event, selectedTime) => {
     setWakeTime(selectedTime);
-    
   };
-  
+
   const recommendation = () => {
     if (showTimePicker == true) {
       rec = "Be careful! Changing your sleep schedule too often can result in lower sleep quality and higher stress!";
-    }
-    else if (userData.sleepGoal < 7) {
+    } else if (userData.sleepGoal < 7) {
       rec = "Sleeping less than 7 hours a day can lead to many health issues and lack of productivity throughout the day.";
-    }
-    else if (bedTime.getHours() < 18 && bedTime.getHours() > 6) {
+    } else if (bedTime.getHours() < 18 && bedTime.getHours() > 6) {
       rec = "If you're planning on sleeping early in the day, darkening your room can help immensely in falling asleep and improving the quality of your sleep!";
-    }
-    else if (userData.stepcount < userData.dailyStepGoal) {
-      if (bedTime.getHours() - (new Date().getHours()) > 4) {
+    } else if (userData.stepcount < userData.dailyStepGoal) {
+      if (bedTime.getHours() - new Date().getHours() > 4) {
         rec = "Regular physical activity helps aiding in sleep quality and duration!";
-      }
-      else {
+      } else {
         rec = "Try avoiding physical activity too close to bedtime as this can energize your body and delay your transition to sleep.";
       }
-    }
-    else {
+    } else {
       let randomnum = Math.floor(Math.random() * 5);
       if (randomnum == 0) {
         rec = "If you take naps during the day, try limiting them to <20 minutes a day and be careful not to nap too close to bedtime!";
-      }
-      else if (randomnum == 1) {
+      } else if (randomnum == 1) {
         rec = "Exposure to electronic screens before bedtime upsets your body's abilty to fall asleep. Try limiting screen time to an hour before your bedtime.";
-      }
-      else if (randomnum == 2) {
+      } else if (randomnum == 2) {
         if (userData.age > 20) {
           rec = "Drinking alcohol close to bedtime can lead to disruptions to your sleep and decrease sleep quality. Try limiting alcohol consumption to 4 hours before bedtime!";
+        } else {
+          rec = "If you're having trouble falling asleep, try limiting your bed to sleeping times only. Try to avoid doing any other tasks such as reading, eating, or listening to music.";
         }
-        else {
-          rec = "If you're having trouble falling asleep, try limiting your bed to sleeping times only. Try to avoid doing any other tasks such as reading, eating, or listening to music."
-        }
-      }
-      else if (randomnum == 3) {
+      } else if (randomnum == 3) {
         rec = "Be sure to stick to a sleeping routine to help condition your body into preparing itself for rest!";
-      }
-      else {
+      } else {
         rec = "Practicing gentle stretches before bed can help your body relax itself for sleep.";
       }
     }
     return rec;
-  }
+  };
 
   return (
-    
     <SafeAreaView style={styles.background}>
       <ScrollView>
         <View>
@@ -80,32 +67,27 @@ const SleepScreen = () => {
             <Text style={styles.recommendText}>{recommendation()}</Text>
           </View>
         </View>
-          
+
         <View style={styles.sleepTimeContainer}>
-          <Text style={styles.sleepText}>BedTime{"\n\n"}{bedTimeString}</Text>
-          <View style={{height: "66%", width: 1, backgroundColor: "#EDEBF1"}}></View>
-          <Text style={styles.sleepText}>Wake Up Time{"\n\n"}{wakeTimeString}</Text>
+          <Text style={styles.sleepText}>
+            BedTime{"\n\n"}
+            {bedTimeString}
+          </Text>
+          <View style={{ height: "66%", width: 1, backgroundColor: "#EDEBF1" }}></View>
+          <Text style={styles.sleepText}>
+            Wake Up Time{"\n\n"}
+            {wakeTimeString}
+          </Text>
         </View>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => setShowTimePicker(!showTimePicker)}>
             <Text style={styles.buttonText}>Set preferred wake time</Text>
           </TouchableOpacity>
-          {
-            showTimePicker && (
-              <DateTimePicker
-              mode={"time"}
-              value={wakeTime}
-              onChange={onChange}
-            />
-            )
-          }
-
+          {showTimePicker && <DateTimePicker mode={"time"} value={wakeTime} onChange={onChange} />}
         </View>
-
       </ScrollView>
     </SafeAreaView>
-    
   );
 };
 
@@ -116,8 +98,12 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 36,
-    marginLeft: 10,
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#EC268F",
+    marginBottom: 20,
+    textAlign: "center",
+    marginTop: 18,
   },
 
   recommendBox: {

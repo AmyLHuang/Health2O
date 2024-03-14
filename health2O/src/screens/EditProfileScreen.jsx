@@ -96,9 +96,11 @@ const EditProfileScreen = ({ navigation }) => {
           <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setHeightIn(text)} value={heightIn} placeholder="Inches" keyboardType="numeric" />
         </View>
 
-        <Text style={styles.label}>Daily Step Goal</Text>
+        <Text style={styles.label}>Daily Sleep Goal</Text>
         <TextInput style={styles.input} value={dailySleepGoal} onChangeText={(text) => setDailySleepGoal(text)} keyboardType="numeric" />
-
+        
+        <Text style={styles.label}>Daily Step Goal</Text>
+        <TextInput style={styles.input} value={stepGoal} onChangeText={(text) => setStepGoal(text)} keyboardType="numeric" />
         <Text style={styles.label}>Bedtime</Text>
         <View style={styles.inputRowContainer}>
           <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setBedTimeHour(text)} value={bedTimeHour} placeholder="Hour" keyboardType="numeric" />

@@ -137,42 +137,44 @@ const ExerciseScreen = () => {
 
   setInterval(recommendation, 3000);
 
+  
   return (
     <SafeAreaView style={styles.background}>
-      <View>
+      <View style={styles.header}>
         <Text style={styles.title}>Exercise</Text>
       </View>
       <View style={styles.recommendBox}>
-        <Text style={styles.recommendTitle}>Recommendation</Text>
+        <Text style={styles.recommendTitle}>Today's Recommendation</Text>
         <View style={styles.recommendTextBox}>
           <Text style={styles.recommendText}>{recString}</Text>
         </View>
       </View>
-      <View>
-        <SVG height="95%" width="100%" viewBox="0 0 100 100">
-          <Circle cx="50%" r={radius} stroke="transparent" strokeWidth="5" fill="#93DCCA" />
+      <View style={styles.progressContainer}>
+        <SVG height="200" width="200" viewBox="0 0 100 100">
+          <Circle cx="50" cy="50" r={radius} stroke="#D3D3D3" strokeWidth="5" fill="transparent" />
           <CircleProgress
             animatedProps={animatedCircleProps}
-            cx="50%"
+            cx="50"
+            cy="50"
             r={radius}
-            stroke="#ED6A6A"
-            strokeWidth="5"
-            strokeDasharray={`${radius * Math.PI * 2}`}
+            stroke="#4CAF50"
+            strokeWidth="10"
+            strokeDasharray={circumference}
             strokeDashoffset={circleFilled}
             strokeLinecap="round"
             fill="transparent"
           />
         </SVG>
-        <Text style={styles.stepDisplay}>{stepCount}</Text>
-        <Text style={styles.stepGoal}>
-          STEPS{"\n\n"}GOAL {stepGoal}
-        </Text>
+        <View style={styles.stepInfo}>
+          <Text style={styles.stepDisplay}>{stepCount}</Text>
+          <Text style={styles.stepGoal}>Goal: {stepGoal} Steps</Text>
+        </View>
+        
       </View>
       <View style={styles.distanceContainer}>
-        <Text style={styles.distanceCounter}>
-          Distance traveled{"\n"}
-          {distanceWalked} miles
-        </Text>
+        <Text style={styles.distanceTitle}>Progress</Text>
+        <Text style={styles.distanceCounter}>{distanceWalked} miles walked</Text>
+        <Text style={styles.remainingDistance}>{distanceToWalk} miles to goal</Text>
       </View>
     </SafeAreaView>
   );
@@ -180,79 +182,94 @@ const ExerciseScreen = () => {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: "#E4F8EB",
+    flex: 1,
+    backgroundColor: "#F0F4F8",
   },
-
+  header: {
+    padding: 20,
+  },
   title: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#EC268F",
-    marginBottom: 20,
+    color: "#333",
     textAlign: "center",
-    marginTop: 18,
   },
-
   recommendBox: {
-    backgroundColor: "#93DCCA",
-    justifyContent: "center",
-    borderRadius: 10,
-    margin: 10,
-    marginHorizontal: 30,
-    borderColor: "FFFFFF",
-    borderWidth: 1,
-  },
-
-  recommendTitle: {
-    fontSize: 20,
-    margin: 10,
-  },
-
-  recommendTextBox: {
-    backgroundColor: "#E4F8EB",
-    borderRadius: 10,
-    margin: 10,
-  },
-
-  recommendText: {
-    fontSize: 15,
-    margin: 5,
-  },
-
-  stepDisplay: {
-    justifyContent: "center",
-    textAlign: "center",
-    fontSize: 85,
-    fontWeight: "bold",
-    position: "absolute",
-    marginTop: "22%",
-    alignSelf: "center",
-  },
-
-  stepGoal: {
-    justifyContent: "center",
-    textAlign: "center",
-    fontSize: 35,
-    fontWeight: "bold",
-    position: "absolute",
-    marginTop: "42%",
-    alignSelf: "center",
-  },
-
-  distanceContainer: {
-    backgroundColor: "#93DCCA",
-    marginHorizontal: 20,
-    position: "absolute",
-    alignSelf: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-    bottom: 220,
+    backgroundColor: "#FFF",
+    borderRadius: 20,
     padding: 15,
+    marginHorizontal: 20,
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
-
-  distanceCounter: {
-    fontSize: 40,
+  recommendTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+  },
+  recommendTextBox: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "#E8EFE7",
+    borderRadius: 15,
+  },
+  recommendText: {
+    fontSize: 16,
+    color: "#666",
+  },
+  progressContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
+  },
+  stepInfo: {
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  stepDisplay: {
+    fontSize: 32,
     fontWeight: "bold",
+    color: "#4CAF50",
+  },
+  stepGoal: {
+    fontSize: 18,
+    color: "#666",
+  },
+  distanceContainer: {
+    backgroundColor: "#FFF",
+    borderRadius: 20,
+    padding: 15,
+    margin: 20,
+    marginTop: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  distanceTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
     textAlign: "center",
+  },
+  distanceCounter: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#4CAF50",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  remainingDistance: {
+    fontSize: 18,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 5,
   },
 });
 

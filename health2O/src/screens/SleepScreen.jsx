@@ -57,35 +57,36 @@ const SleepScreen = () => {
 
   return (
     <SafeAreaView style={styles.background}>
-      <ScrollView>
-        <View>
-          <Text style={styles.title}>Sleep</Text>
-        </View>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <Text style={styles.title}>Sleep Tracker</Text>
+
         <View style={styles.recommendBox}>
-          <Text style={styles.recommendTitle}>Recommendation</Text>
+          <Text style={styles.recommendTitle}>Tonight's Recommendation</Text>
           <View style={styles.recommendTextBox}>
             <Text style={styles.recommendText}>{recommendation()}</Text>
           </View>
         </View>
 
-        <View style={styles.sleepTimeContainer}>
-          <Text style={styles.sleepText}>
-            BedTime{"\n\n"}
-            {bedTimeString}
-          </Text>
-          <View style={{ height: "66%", width: 1, backgroundColor: "#EDEBF1" }}></View>
-          <Text style={styles.sleepText}>
-            Wake Up Time{"\n\n"}
-            {wakeTimeString}
-          </Text>
+        <View style={styles.timeContainer}>
+          <View style={styles.timeBox}>
+            <Text style={styles.timeLabel}>Bedtime</Text>
+            <Text style={styles.time}>{bedTimeString}</Text>
+          </View>
+          <View style={styles.separator}></View>
+          <View style={styles.timeBox}>
+            <Text style={styles.timeLabel}>Wake Up Time</Text>
+            <Text style={styles.time}>{wakeTimeString}</Text>
+          </View>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => setShowTimePicker(!showTimePicker)}>
-            <Text style={styles.buttonText}>Set preferred wake time</Text>
-          </TouchableOpacity>
-          {showTimePicker && <DateTimePicker mode={"time"} value={wakeTime} onChange={onChange} />}
-        </View>
+        <TouchableOpacity style={styles.button} onPress={() => setShowTimePicker(!showTimePicker)}>
+          <Text style={styles.buttonText}>Set Wake Time</Text>
+        </TouchableOpacity>
+        { showTimePicker && (<View style={styles.centeredPicker}>
+      <DateTimePicker mode={"time"} value={wakeTime} onChange={onChange} />
+    </View>
+        )
+  }
       </ScrollView>
     </SafeAreaView>
   );
@@ -93,80 +94,96 @@ const SleepScreen = () => {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: "#FEFFED",
+    backgroundColor: "#F5F7FA",
     flex: 1,
   },
-
+  scrollView: {
+    paddingBottom: 20,
+  },
   title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#EC268F",
+    fontSize: 24,
+    fontWeight: "600",
+    color: "#324A60",
+    marginTop: 20,
     marginBottom: 20,
     textAlign: "center",
-    marginTop: 18,
   },
-
   recommendBox: {
-    backgroundColor: "#F3F6C8",
-    justifyContent: "center",
-    borderRadius: 10,
-    margin: 10,
-    marginHorizontal: 30,
-    borderColor: "FFFFFF",
-    borderWidth: 1,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    margin: 20,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
   },
-
   recommendTitle: {
-    fontSize: 20,
-    margin: 10,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#324A60",
+    marginBottom: 10,
   },
-
   recommendTextBox: {
-    backgroundColor: "#FEFFED",
-    borderRadius: 10,
-    margin: 10,
+    backgroundColor: "#FFF7E0",
+    borderRadius: 12,
+    padding: 10,
   },
-
   recommendText: {
-    fontSize: 15,
-    margin: 5,
+    fontSize: 16,
+    color: "#5D4037",
   },
-
-  sleepTimeContainer: {
-    backgroundColor: "#BBA904",
-    borderRadius: 10,
+  timeContainer: {
     flexDirection: "row",
-    marginHorizontal: 50,
-    marginTop: 5,
-    marginBottom: 15,
     justifyContent: "space-evenly",
     alignItems: "center",
+    marginHorizontal: 20,
+    marginTop: 20,
+    backgroundColor: "#FFEFCC",
+    borderRadius: 12,
+    paddingVertical: 20,
   },
-
-  sleepText: {
-    fontSize: 20,
-    margin: 10,
-    color: "#EFEBF1",
-    textAlign: "center",
+  timeBox: {
+    alignItems: "center",
   },
-
-  buttonContainer: {
-    justifyContent: "space-around",
-    flexDirection: "row",
-    marginHorizontal: 40,
+  timeLabel: {
+    fontSize: 18,
+    color: "#324A60",
+    marginBottom: 5,
   },
-
+  time: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#324A60",
+  },
+  separator: {
+    height: "80%",
+    width: 1,
+    backgroundColor: "#CBD5E1",
+  },
   button: {
-    backgroundColor: "#FFC374",
-    borderRadius: 10,
+    backgroundColor: "#FFB347",
+    borderRadius: 20,
     justifyContent: "center",
+    marginHorizontal: 50,
+    marginTop: 30,
+    paddingVertical: 12,
   },
-
   buttonText: {
-    fontSize: 20,
+    fontSize: 18,
+    color: "#FFFFFF",
     textAlign: "center",
-    margin: 7,
   },
+  centeredPicker: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
 });
 
 export default SleepScreen;

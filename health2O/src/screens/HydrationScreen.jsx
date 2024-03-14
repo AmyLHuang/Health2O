@@ -7,7 +7,6 @@ import { Overlay } from "@rneui/base";
 import useUserData from "../hooks/useUserData";
 import { BarChart } from "react-native-chart-kit";
 
-const profileImage = require("../../assets/health20.png");
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const day = daysOfWeek[new Date().getDay()];
 const chartConfig = {
@@ -87,8 +86,8 @@ const HydrationScreen = () => {
 
   const updateHydrationGoalAmount = async (amount) => {
     setAmount(amount);
-    await setDoc(doc(firestore, "Users", auth.currentUser.uid), { hydrationGoal: amount}, {merge: true});
-  }
+    await setDoc(doc(firestore, "Users", auth.currentUser.uid), { hydrationGoal: amount }, { merge: true });
+  };
 
   const formatData = () => {
     if (userData.hydration == undefined) {

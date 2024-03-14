@@ -16,7 +16,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [bedTimeMin, setBedTimeMin] = useState("");
   const userData = useUserData();
 
-  console.log(userData);
+  // console.log(userData);
   useEffect(() => {
     if (userData) {
       setUsername(userData.username || "");
@@ -30,20 +30,6 @@ const EditProfileScreen = ({ navigation }) => {
       setBedTimeMin(userData.bedtime ? String(userData.bedtime.mm) : "");
     }
   }, [userData]);
-
-  const handleUpdatePress = async () => {
-    // Display a yes/no confirmation alert
-    Alert.alert("Confirmation", `Are you sure you want to update profile?`, [
-      { text: "No", style: "cancel" },
-      {
-        text: "Yes",
-        onPress: async () => {
-          // User confirmed, update the Firestore document
-          await updateFirestoreDocument();
-        },
-      },
-    ]);
-  };
 
   const info = {
     username: username,
@@ -61,9 +47,22 @@ const EditProfileScreen = ({ navigation }) => {
     },
   };
 
+  // confirmation if user wants to update profile
+  const handleUpdatePress = async () => {
+    Alert.alert("Confirmation", `Are you sure you want to update profile?`, [
+      { text: "No", style: "cancel" },
+      {
+        text: "Yes",
+        onPress: async () => {
+          await updateFirestoreDocument();
+        },
+      },
+    ]);
+  };
+
+  // update database with new profile info
   const updateFirestoreDocument = async () => {
     try {
-      // Update the value in the specified document
       await setDoc(doc(firestore, "Users", auth.currentUser.uid), info, { merge: true });
       Alert.alert("Successfully updated profile info");
     } catch (error) {
@@ -72,45 +71,46 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <SafeAreaView>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
             <Text style={styles.backButtonText}>← Go Back</Text>
           </TouchableOpacity>
 
           <Text style={styles.title}>Edit Profile</Text>
+        </SafeAreaView>
 
-          {/* Username Input */}
-          <TextInput style={styles.input} onChangeText={(text) => setUsername(text)} value={username} />
+        <Text style={styles.label}>Username</Text>
+        <TextInput style={styles.input} onChangeText={(text) => setUsername(text)} value={username} />
 
-          {/* Gender Input */}
-          <TextInput style={styles.input} onChangeText={(text) => setGender(text)} value={gender} />
+        <Text style={styles.label}>Gender</Text>
+        <TextInput style={styles.input} onChangeText={(text) => setGender(text)} value={gender} />
 
-          {/* Age Input */}
-          <TextInput style={styles.input} onChangeText={(text) => setAge(text)} value={age} />
+        <Text style={styles.label}>Age</Text>
+        <TextInput style={styles.input} onChangeText={(text) => setAge(text)} value={age} />
 
-          <View style={styles.heightInputContainer}>
-            <TextInput style={[styles.input, styles.heightInput]} onChangeText={(text) => setHeightFt(text)} value={heightFt} placeholder="Feet" keyboardType="numeric" />
-            <TextInput style={[styles.input, styles.heightInput]} onChangeText={(text) => setHeightIn(text)} value={heightIn} placeholder="Inches" keyboardType="numeric" />
-          </View>
+        <Text style={styles.label}>Height</Text>
+        <View style={styles.inputRowContainer}>
+          <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setHeightFt(text)} value={heightFt} placeholder="Feet" keyboardType="numeric" />
+          <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setHeightIn(text)} value={heightIn} placeholder="Inches" keyboardType="numeric" />
+        </View>
 
-          {/* Daily Sleep Goal Input */}
-          <TextInput style={styles.input} value={dailySleepGoal} onChangeText={(text) => setDailySleepGoal(text)} keyboardType="numeric" />
+        <Text style={styles.label}>Daily Step Goal</Text>
+        <TextInput style={styles.input} value={dailySleepGoal} onChangeText={(text) => setDailySleepGoal(text)} keyboardType="numeric" />
 
-          {/* Bedtime Input */}
-          <View style={styles.bedtimeInputContainer}>
-            <TextInput style={[styles.input, styles.bedtimeInput]} onChangeText={(text) => setBedTimeHour(text)} value={bedTimeHour} placeholder="Hour" keyboardType="numeric" />
-            <TextInput style={[styles.input, styles.bedtimeInput]} onChangeText={(text) => setBedTimeMin(text)} value={bedTimeMin} placeholder="Minute" keyboardType="numeric" />
-          </View>
+        <Text style={styles.label}>Bedtime</Text>
+        <View style={styles.inputRowContainer}>
+          <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setBedTimeHour(text)} value={bedTimeHour} placeholder="Hour" keyboardType="numeric" />
+          <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setBedTimeMin(text)} value={bedTimeMin} placeholder="Minute" keyboardType="numeric" />
+        </View>
 
-          {/* Update Button */}
-          <TouchableOpacity onPress={handleUpdatePress} style={styles.updateButton}>
-            <Text style={styles.updateButtonText}>Update Profile</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        {/* Update Button */}
+        <TouchableOpacity onPress={handleUpdatePress} style={styles.updateButton}>
+          <Text style={styles.updateButtonText}>Update Profile</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -118,10 +118,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f2f2f2",
-  },
-  scrollContainer: {
-    alignItems: "center",
     padding: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 5,
+    textAlign: "left",
   },
   backButton: {
     alignSelf: "flex-start",
@@ -136,6 +139,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#EC268F",
     marginBottom: 30,
+    textAlign: "center",
   },
   input: {
     width: "100%",
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     fontSize: 16,
     borderColor: "#D2D2D2",
     borderWidth: 1,
@@ -156,26 +160,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+  inputRowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  inputRow: {
+    width: "48%",
+  },
   updateButtonText: {
     color: "#FFF",
     fontSize: 18,
     fontWeight: "bold",
-  },
-  heightInputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  heightInput: {
-    width: "48%",
-  },
-  bedtimeInputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  bedtimeInput: {
-    width: "48%",
   },
 });
 

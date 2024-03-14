@@ -2,25 +2,25 @@ import React from "react";
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Switch } from "react-native";
 import { signOut } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
-import { MaterialIcons } from '@expo/vector-icons'; 
+import { MaterialIcons } from "@expo/vector-icons";
 
 const SettingsScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = React.useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const handleSignOut = async () => {
     try {
       await signOut(auth);
       navigation.navigate("Login");
     } catch (error) {
-      Alert.alert("Error", error.message);
+      console.log("Error", error.message);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Settings</Text>
-      
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("EditProfile")}>
@@ -41,12 +41,7 @@ const SettingsScreen = ({ navigation }) => {
         <Text style={styles.sectionTitle}>Preferences</Text>
         <View style={styles.switchRow}>
           <Text style={styles.switchText}>Enable Notifications</Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          />
+          <Switch trackColor={{ false: "#767577", true: "#81b0ff" }} thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"} onValueChange={toggleSwitch} value={isEnabled} />
         </View>
       </View>
       <View style={styles.section}>
@@ -55,7 +50,7 @@ const SettingsScreen = ({ navigation }) => {
           <MaterialIcons name="info" size={24} color="black" />
           <Text style={styles.buttonText}>About Us</Text>
         </TouchableOpacity>
-        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -79,18 +74,18 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 15,
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 15,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 10,
     marginBottom: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -99,25 +94,25 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: 10,
     fontSize: 18,
-    color: '#333',
+    color: "#333",
   },
   switchRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 15,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 10,
     marginBottom: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-   shadowOpacity: 0.25,
+    shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
   },
   switchText: {
     fontSize: 18,
-    color: '#333',
+    color: "#333",
   },
 });
 

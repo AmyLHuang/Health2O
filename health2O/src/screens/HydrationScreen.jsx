@@ -154,12 +154,12 @@ const HydrationScreen = () => {
             <Text style={styles.title}>Hydration</Text>
           </SafeAreaView>
 
-          <View style={styles.rec}>
-            <Text style={styles.subtitle}>Recommendation</Text>
-            <View style={styles.recbg}>
-              <Text style={styles.rectext}>{recommendation()}</Text>
-            </View>
+          <View style={styles.recommendBox}>
+          <Text style={styles.recommendTitle}>Recommendation</Text>
+          <View style={styles.recommendTextBox}>
+            <Text style={styles.recommendText}>{recommendation()}</Text>
           </View>
+        </View>
 
           <View style={{ flex: 1.2, flexDirection: "row" }}>
             <View style={styles.target}>
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "bold",
-    color: "#EC268F",
+    color: "#333",
     marginBottom: 20,
     textAlign: "center",
     marginTop: 18,
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
 
   rec: {
     flex: 1.5,
-    backgroundColor: "#A5DEFF",
+    backgroundColor: "#CCE0E9",
     borderRadius: 10,
     marginLeft: 10,
     marginRight: 10,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
 
   target: {
     flex: 1,
-    backgroundColor: "#CBE9FF",
+    backgroundColor: "#CCE0E9",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 10,
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
 
   log: {
     flex: 1,
-    backgroundColor: "#A5DEFF",
+    backgroundColor: "#CCE0E9",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 10,
@@ -343,5 +343,34 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: "black",
     fontWeight: "bold",
+  },
+  recommendBox: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    margin: 20,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  recommendTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#324A60",
+    marginBottom: 10,
+  },
+  recommendTextBox: {
+    backgroundColor: "#CCE0E9",
+    borderRadius: 12,
+    padding: 10,
+  },
+  recommendText: {
+    fontSize: 16,
+    color: "#617D98",
   },
 });

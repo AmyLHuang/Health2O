@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
 
   const sleepScore = Math.min(Math.floor((8 / sleepData.goal) * 100), 100);
   const hydrateScore = Math.min(Math.floor((hydrateData?.currentAmount / hydrateData?.goal) * 100), 100);
-  const exerciseScore = Math.min(Math.floor((4000 / exerciseData.goal) * 100), 100);
+  const exerciseScore = Math.min(Math.floor((exerciseData.stepcount / exerciseData.goal) * 100), 100);
 
   const score = ((sleepScore + hydrateScore + exerciseScore) / 3).toFixed(1);
 
@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
     } else if (score >= 40) {
       return "Adequate";
     } else {
-      return "Time to get started";
+      return "Can do better";
     }
   };
 
@@ -52,7 +52,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.modalText}>80%-99% = Excellent</Text>
           <Text style={styles.modalText}>60%-79% = Good</Text>
           <Text style={styles.modalText}>40%-59% = Adaquate</Text>
-          <Text style={styles.modalText}>0%-39% = Need to get started</Text>
+          <Text style={styles.modalText}>0%-39% = Can do better</Text>
           <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
@@ -103,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
               <Text>Description: {weatherData.weather[0].description}</Text>
             </>
           ) : (
-            <Text>No weather data available</Text>
+            <Text>Loading...</Text>
           )}
         </View>
         {/* Sleep */}
@@ -141,7 +141,9 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.progCircle}>
             <ProgressCircle radius={40} percentage={exerciseScore} color={"green"} />
           </View>
-          <Text style={{ textAlign: "center", marginTop: 10 }}>4000 / {exerciseData.goal} Steps</Text>
+          <Text style={{ textAlign: "center", marginTop: 10 }}>
+            {exerciseData.stepcount} / {exerciseData.goal} Steps
+          </Text>
         </View>
       </View>
     </ScrollView>
@@ -151,7 +153,7 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#F0F4F8",
   },
   title: {
     fontSize: 26,

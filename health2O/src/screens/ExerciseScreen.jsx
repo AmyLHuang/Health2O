@@ -13,36 +13,51 @@ const radius = 35;
 const circumference = radius * Math.PI * 2;
 
 const ExerciseScreen = () => {
-  const [stepCount, setStepCount] = useState(0);
+  const [currentStepCount, setCurrentStepCount] = useState(0);
+  const [pastStepCount, setPastStepCount] = useState(0);
   const [recString, setRecString] = useState("");
-  const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
-  // let rec = "";
+  const { profileData, exerciseData } = useUserData();
 
-  let stepGoal = 8000;
-  if (!isNaN(exerciseData.goal)) {
-    stepGoal = exerciseData.goal;
-  }
+  const stepGoal = exerciseData.goal;
 
+  // get total number of steps taken today
   const getSteps = async () => {
     const isAvailable = await Pedometer.isAvailableAsync();
 
     if (isAvailable) {
-      const endDate = new Date();
-      const startDate = new Date();
-      startDate.setUTCHours(0, 0, 0, 0);
-      endDate.setUTCHours(23, 59, 59, 999);
+      var currentDate = new Date();
+      var beginningOfDay = new Date(currentDate);
+      beginningOfDay.setHours(0, 0, 0, 0);
 
-      const pastStep = await Pedometer.getStepCountAsync(startDate, endDate);
+      const stepsToday = await Pedometer.getStepCountAsync(beginningOfDay, currentDate);
+      if (stepsToday) {
+        setPastStepCount(stepsToday.steps);
+      }
 
       return Pedometer.watchStepCount((result) => {
-        setStepCount(result.steps);
-        if (pastStep) {
-          setStepCount(result.steps + pastStep.steps);
-        }
-        updateExerciseDataStepCount();
+        setCurrentStepCount(result.steps);
+        updateExerciseDataStepCount(result.steps);
       });
     }
   };
+
+  // update firestore data for stepcount
+  const updateExerciseDataStepCount = async (count) => {
+    if (pastStepCount > 0) {
+      try {
+        await setDoc(doc(firestore, "Exercise", auth.currentUser.email), { stepcount: count + pastStepCount }, { merge: true });
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getSteps();
+    return () => setCurrentStepCount(0);
+  }, []);
+
+  const stepCount = exerciseData.stepcount;
 
   const strokeOffset = useSharedValue(circumference);
   const animatedCircleProps = useAnimatedProps(() => {
@@ -52,25 +67,11 @@ const ExerciseScreen = () => {
   });
 
   useEffect(() => {
-    const steps = getSteps();
-    return () => steps;
-  }, []);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setRecString(recommendation());
     }, 10000);
     return () => clearInterval(interval);
   }, []);
-
-  const updateExerciseDataStepCount = async () => {
-    try {
-      // Update the value in the specified document
-      await setDoc(doc(firestore, "Exercise", auth.currentUser.email), { stepcount: stepCount }, { merge: true });
-    } catch (error) {
-      console.error("Error updating document: ", error);
-    }
-  };
 
   const circleFilled = circumference - (((circumference * stepCount) / stepGoal) % circumference);
   const percentWalked = (circumference - circleFilled) / circumference;
@@ -161,11 +162,13 @@ const ExerciseScreen = () => {
             fill="transparent"
           />
         </SVG>
-        <View style={styles.stepInfo}>
-          <Text style={styles.stepDisplay}>{stepCount}</Text>
-          <Text style={styles.stepGoal}>Goal: {stepGoal} Steps</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.stepInfo}>{stepCount}</Text>
+          <Text style={styles.stepText}>Steps</Text>
+          <Text style={styles.stepGoal}>Goal: {stepGoal}</Text>
         </View>
       </View>
+
       <View style={styles.distanceContainer}>
         <Text style={styles.distanceTitle}>Progress</Text>
         <Text style={styles.distanceCounter}>{distanceWalked} miles walked</Text>
@@ -192,21 +195,25 @@ const styles = StyleSheet.create({
   progressContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 30,
   },
-  stepInfo: {
+  textContainer: {
     position: "absolute",
     alignItems: "center",
-    justifyContent: "center",
   },
-  stepDisplay: {
+  stepInfo: {
     fontSize: 32,
     fontWeight: "bold",
     color: "#4CAF50",
   },
+  stepText: {
+    fontSize: 22,
+    marginTop: -6,
+    marginBottom: 8,
+  },
   stepGoal: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#666",
+    textAlign: "center",
   },
   distanceContainer: {
     backgroundColor: "#FFF",

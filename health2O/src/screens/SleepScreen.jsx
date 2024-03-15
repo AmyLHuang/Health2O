@@ -89,7 +89,7 @@ const SleepScreen = () => {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: "#F5F7FA",
+    backgroundColor: "#F0F4F8",
     flex: 1,
   },
   scrollView: {

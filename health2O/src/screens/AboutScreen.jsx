@@ -38,21 +38,8 @@ const AboutScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#F0F4F8",
   },
-  // backButton: {
-  //   marginRight: 10,
-  //   backgroundColor: "#EC268F",
-  //   borderRadius: 20,
-  //   width: 40,
-  //   height: 40,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // backButtonText: {
-  //   color: "#ffffff",
-  //   fontSize: 24,
-  // },
   backButton: {
     alignSelf: "flex-start",
     marginBottom: 10,

@@ -39,6 +39,7 @@ const CreateProfileScreen = ({ navigation }) => {
 
     const exerciseInfo = {
       goal: parseInt(stepGoal),
+      stepcount: 0,
     };
 
     const hydrateInfo = {

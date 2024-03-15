@@ -17,6 +17,7 @@ const ExerciseScreen = () => {
   const [pastStepCount, setPastStepCount] = useState(0);
   const [recString, setRecString] = useState("");
   const { profileData, exerciseData } = useUserData();
+  const [stepCount, setStepCount] = useState(exerciseData.stepcount);
 
   const stepGoal = exerciseData.goal;
 
@@ -32,6 +33,9 @@ const ExerciseScreen = () => {
       const stepsToday = await Pedometer.getStepCountAsync(beginningOfDay, currentDate);
       if (stepsToday) {
         setPastStepCount(stepsToday.steps);
+        if (currentStepCount == 0) {
+          updateExerciseDataStepCount(0);
+        }
       }
 
       return Pedometer.watchStepCount((result) => {
@@ -43,6 +47,7 @@ const ExerciseScreen = () => {
 
   // update firestore data for stepcount
   const updateExerciseDataStepCount = async (count) => {
+    setStepCount(count + pastStepCount);
     if (pastStepCount > 0) {
       try {
         await setDoc(doc(firestore, "Exercise", auth.currentUser.email), { stepcount: count + pastStepCount }, { merge: true });
@@ -55,9 +60,7 @@ const ExerciseScreen = () => {
   useEffect(() => {
     getSteps();
     return () => setCurrentStepCount(0);
-  }, []);
-
-  const stepCount = exerciseData.stepcount;
+  }, [currentStepCount, stepCount]);
 
   const strokeOffset = useSharedValue(circumference);
   const animatedCircleProps = useAnimatedProps(() => {
@@ -165,7 +168,7 @@ const ExerciseScreen = () => {
         <View style={styles.textContainer}>
           <Text style={styles.stepInfo}>{stepCount}</Text>
           <Text style={styles.stepText}>Steps</Text>
-          <Text style={styles.stepGoal}>Goal: {stepGoal}</Text>
+          <Text style={styles.stepGoalText}>Goal: {stepGoal}</Text>
         </View>
       </View>
 
@@ -210,7 +213,7 @@ const styles = StyleSheet.create({
     marginTop: -6,
     marginBottom: 8,
   },
-  stepGoal: {
+  stepGoalText: {
     fontSize: 16,
     color: "#666",
     textAlign: "center",

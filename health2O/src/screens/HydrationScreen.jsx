@@ -1,6 +1,5 @@
 import React, { Component, useState } from "react";
-import { View, Text, Image, StyleSheet, Pressable, ScrollView, Animated, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native";
-import RNPickerSelect from "react-native-picker-select";
+import { View, Text, StyleSheet, Pressable, ScrollView, Animated, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import { auth, firestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { Overlay } from "@rneui/base";
@@ -17,23 +16,23 @@ const chartConfig = {
   backgroundGradientToOpacity: 1,
   color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   barPercentage: 0.5,
-  useShadowColorFromDataset: false, // optional
+  useShadowColorFromDataset: false,
 };
 
 class WaterBottle extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      waterLevel: new Animated.Value(0), // current water level
+      waterLevel: new Animated.Value(0),
       currentAmount: 0,
     };
   }
 
   fillBottle = () => {
     const waterLevel = this.state.waterLevel;
-    if (waterLevel._value < 1.0 && this.props.target && this.props.unit) {
+    if (waterLevel._value < 1.0 && this.props.target) {
       Animated.timing(waterLevel, {
-        toValue: waterLevel._value + 0.125, // Fill water
+        toValue: waterLevel._value + 0.125,
         duration: 500,
         useNativeDriver: false,
       }).start(() => {
@@ -45,7 +44,7 @@ class WaterBottle extends Component {
 
   updateHydrationData = async () => {
     if (this.state.waterLevel._value >= 1) {
-      await setDoc(doc(firestore, "Users", auth.currentUser.uid), { hydration: { [day]: { date: Math.floor(Date.now() / 1000), amount: this.props.target, unit: this.props.unit } } }, { merge: true });
+      await setDoc(doc(firestore, "Users", auth.currentUser.uid), { hydration: { [day]: { date: Math.floor(Date.now() / 1000), amount: this.props.target } } }, { merge: true });
     }
   };
 
@@ -69,7 +68,7 @@ class WaterBottle extends Component {
           <View style={styles.bottle}>
             <Animated.View style={[styles.water, { height: waterLevel }]} />
             <Text style={styles.currentAmountText}>
-              {currentAmount}/{this.props.target} {this.props.unit}
+              {currentAmount}/{this.props.target} Liters
             </Text>
             <Text style={[styles.currentAmountText, { top: "10%", color: "white" }]}>{this.targetReached()}</Text>
           </View>
@@ -95,7 +94,7 @@ const HydrationScreen = () => {
       return <Text>Loading...</Text>;
     }
     const hydrationMap = hydrateData.hydration;
-    const days = (Object.keys(hydrationMap).slice(day + 1) + Object.keys(hydrationMap).slice(0, day + 1)).split(",");
+    const days = Array.from(Object.keys(hydrationMap)).sort((a, b) => daysOfWeek.indexOf(a) - daysOfWeek.indexOf(b));
     const amounts = days.map((day) => hydrationMap[day].amount);
     const data = {
       labels: days,
@@ -164,29 +163,13 @@ const HydrationScreen = () => {
                   <TextInput
                     style={styles.targettext}
                     keyboardType="numeric"
-                    placeholder="Amount"
+                    placeholder={userData.hydrationGoal}
                     value={amount}
                     onChangeText={(amount) => updateHydrationGoalAmount(amount)}
                     onEndEditing={() => Keyboard.dismiss()}
                   />
                 </View>
-                <View style={styles.targetbg}>
-                  <RNPickerSelect
-                    style={{ inputIOS: { textAlign: "center" } }}
-                    placeholder={{ label: "Unit", value: null }}
-                    value={selectedUnit}
-                    onValueChange={(unit) => setSelectedUnit(unit)}
-                    items={[
-                      { label: "Cups", value: "Cups" },
-                      { label: "Pints", value: "Pints" },
-                      { label: "Quarts", value: "Quarts" },
-                      { label: "Gallons", value: "Gallons" },
-                      { label: "Ounces", value: "Ounces" },
-                      { label: "Liters", value: "Liters" },
-                      { label: "Mililiters", value: "Mililiters" },
-                    ]}
-                  />
-                </View>
+                <Text style={{ paddingRight: 10, paddingTop: 20 }}>Liters</Text>
               </View>
             </View>
 
@@ -203,7 +186,7 @@ const HydrationScreen = () => {
           </View>
 
           <View style={styles.progressBar}>
-            <WaterBottle target={amount} unit={selectedUnit} />
+            <WaterBottle target={amount} />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -255,6 +238,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     margin: 3,
     marginLeft: 10,
+    marginTop: 10,
   },
 
   recbg: {

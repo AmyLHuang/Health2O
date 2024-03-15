@@ -201,7 +201,7 @@ export default HydrationScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#F0F4F8",
   },
 
   header: {

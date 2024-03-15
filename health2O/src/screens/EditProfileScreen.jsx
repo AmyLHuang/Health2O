@@ -10,7 +10,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [age, setAge] = useState("");
   const [heightFt, setHeightFt] = useState("");
   const [heightIn, setHeightIn] = useState("");
-  const [dailySleepGoal, setDailySleepGoal] = useState("");
+  const [sleepGoal, setSleepGoal] = useState("");
   const [stepGoal, setStepGoal] = useState("");
   const [bedTimeHour, setBedTimeHour] = useState("");
   const [bedTimeMin, setBedTimeMin] = useState("");
@@ -23,7 +23,7 @@ const EditProfileScreen = ({ navigation }) => {
     setHeightFt(profileData.height ? String(profileData.height.ft) : "");
     setHeightIn(profileData.height ? String(profileData.height.in) : "");
     setStepGoal(exerciseData.goal ? String(exerciseData.goal) : "");
-    setDailySleepGoal(sleepData.goal ? String(sleepData.goal) : "");
+    setSleepGoal(sleepData.goal ? String(sleepData.goal) : "");
     setBedTimeHour(sleepData.bedtime ? String(sleepData.bedtime.hh) : "");
     setBedTimeMin(sleepData.bedtime ? String(sleepData.bedtime.mm) : "");
   }, [profileData, sleepData, hydrateData, exerciseData]);
@@ -102,7 +102,7 @@ const EditProfileScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.label}>Daily Sleep Goal</Text>
-        <TextInput style={styles.input} value={dailySleepGoal} onChangeText={(text) => setDailySleepGoal(text)} keyboardType="numeric" />
+        <TextInput style={styles.input} value={sleepGoal} onChangeText={(text) => setSleepGoal(text)} keyboardType="numeric" />
 
         <Text style={styles.label}>Daily Step Goal</Text>
         <TextInput style={styles.input} value={stepGoal} onChangeText={(text) => setStepGoal(text)} keyboardType="numeric" />
@@ -125,7 +125,7 @@ const EditProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#F0F4F8",
   },
   scrollContainer: {
     padding: 18,

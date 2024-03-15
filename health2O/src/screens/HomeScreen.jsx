@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
   const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
   const weatherData = useWeatherData();
 
-  const sleepScore = Math.min(Math.floor((8 / sleepData.goal) * 100), 100);
+  const sleepScore = Math.min(Math.floor((sleepData.prevNight / sleepData.goal) * 100), 100);
   const hydrateScore = Math.min(Math.floor((hydrateData?.currentAmount / hydrateData?.goal) * 100), 100);
   const exerciseScore = Math.min(Math.floor((exerciseData.stepcount / exerciseData.goal) * 100), 100);
 
@@ -115,7 +115,9 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.progCircle}>
             <ProgressCircle radius={40} percentage={sleepScore} color={"orange"} />
           </View>
-          <Text style={{ textAlign: "center", marginTop: 10 }}>8 / {sleepData.goal} Hours</Text>
+          <Text style={{ textAlign: "center", marginTop: 10 }}>
+            {sleepData.prevNight} / {sleepData.goal} Hours
+          </Text>
         </View>
       </View>
       <View style={[styles.boxContainer]}>

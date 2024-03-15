@@ -34,6 +34,7 @@ const CreateProfileScreen = ({ navigation }) => {
         hh: bedTimeHour,
         mm: bedTimeMin,
       },
+      prevNight: parseInt(sleepGoal),
     };
 
     const exerciseInfo = {

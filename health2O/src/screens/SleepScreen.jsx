@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, Button, StyleSheet, TextInput, Switch, ScrollView, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useUserData from "../hooks/useUserData";
 import RecommendationBox from "../components/RecommendationBox";
+import { auth, firestore } from "../../FirebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 const SleepScreen = () => {
-  const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
+  const { profileData, sleepData, exerciseData } = useUserData();
   const [wakeTime, setWakeTime] = useState(new Date(0, 0, 0, 7, 0));
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = useState(true);
+  const [inputValue, setInputValue] = useState("");
 
   let sleepHours = sleepData.goal;
   let rec = "";
@@ -22,10 +26,32 @@ const SleepScreen = () => {
     setWakeTime(selectedTime);
   };
 
+  const handleSubmit = async () => {
+    if (inputValue.trim() === "") return;
+    try {
+      await setDoc(doc(firestore, "Sleep", auth.currentUser.email), { prevNight: inputValue }, { merge: true });
+      setInputValue("");
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  };
+
+  const handleToggleChange = async (value) => {
+    setIsSwitchOn(value);
+    if (value) {
+      try {
+        await setDoc(doc(firestore, "Sleep", auth.currentUser.email), { prevNight: sleepHours }, { merge: true });
+        setInputValue("");
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
+    }
+  };
+
   const recommendation = () => {
     if (showTimePicker == true) {
       rec = "Be careful! Changing your sleep schedule too often can result in lower sleep quality and higher stress!";
-    } else if (sleepData.goal < 7) {
+    } else if (sleepHours < 7) {
       rec = "Sleeping less than 7 hours a day can lead to many health issues and lack of productivity throughout the day.";
     } else if (bedTime.getHours() < 18 && bedTime.getHours() > 6) {
       rec = "If you're planning on sleeping early in the day, darkening your room can help immensely in falling asleep and improving the quality of your sleep!";
@@ -82,6 +108,21 @@ const SleepScreen = () => {
             <DateTimePicker mode={"time"} value={wakeTime} onChange={onChange} />
           </View>
         )}
+
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Met my goal last night</Text>
+            <Switch value={isSwitchOn} thumbColor={isSwitchOn ? "#FFB347" : "gray"} trackColor={{ false: "gray", true: "#FFEFCC" }} onValueChange={handleToggleChange} />
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            {!isSwitchOn && (
+              <>
+                <TextInput style={styles.input} keyboardType="numeric" placeholder="Hrs slept" value={inputValue} onChangeText={setInputValue} />
+                <Button title="Submit" onPress={handleSubmit} />
+              </>
+            )}
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -148,6 +189,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  container: {
+    alignItems: "center",
+    padding: 20,
+    marginTop: "40%",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  headerText: {
+    fontSize: 18,
+    marginRight: 10,
+  },
+  input: {
+    width: "25%",
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 25,
+    padding: 10,
   },
 });
 

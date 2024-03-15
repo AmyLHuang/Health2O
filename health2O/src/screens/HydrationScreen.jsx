@@ -44,7 +44,7 @@ class WaterBottle extends Component {
 
   updateHydrationData = async () => {
     const waterLevel = this.state.waterLevel;
-    await setDoc(doc(firestore, "Hydrate", auth.currentUser.email), { currentAmount: Math.round(waterLevel._value * this.props.target) });
+    await setDoc(doc(firestore, "Hydrate", auth.currentUser.email), { currentAmount: Math.round(waterLevel._value * this.props.target) }, { merge: true });
     if (this.state.waterLevel._value >= 1) {
       await setDoc(doc(firestore, "Hydrate", auth.currentUser.email), { hydration: { [day]: { date: Math.floor(Date.now() / 1000), amount: this.props.target } } }, { merge: true });
     }
@@ -165,7 +165,7 @@ const HydrationScreen = () => {
                   <TextInput
                     style={styles.targettext}
                     keyboardType="numeric"
-                    placeholder={hydrateData.goal}
+                    placeholder={String(hydrateData.goal)}
                     value={amount}
                     onChangeText={(amount) => updateHydrationGoalAmount(amount)}
                     onEndEditing={() => Keyboard.dismiss()}

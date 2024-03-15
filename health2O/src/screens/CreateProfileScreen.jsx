@@ -40,10 +40,16 @@ const CreateProfileScreen = ({ navigation }) => {
       goal: parseInt(stepGoal),
     };
 
+    const hydrateInfo = {
+      goal: 3,
+      currentAmount: 0,
+    };
+
     try {
       await setDoc(doc(firestore, "User", auth.currentUser.email), profileInfo, { merge: true });
       await setDoc(doc(firestore, "Sleep", auth.currentUser.email), sleepInfo);
       await setDoc(doc(firestore, "Exercise", auth.currentUser.email), exerciseInfo);
+      await setDoc(doc(firestore, "Hydrate", auth.currentUser.email), hydrateInfo);
 
       navigation.navigate("Home");
     } catch (error) {

@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Modal, Pressable } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Modal, Image } from "react-native";
+import { FontAwesome5, FontAwesome6, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTint, faWalking, faBed } from "@fortawesome/free-solid-svg-icons";
-import useUserData from "../hooks/useUserData";
 import ProgressCircle from "../components/ProgressCircle";
+import useUserData from "../hooks/useUserData";
+import useWeatherData from "../hooks/useWeatherData";
 
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const userData = useUserData();
+  const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
+  const weatherData = useWeatherData();
 
-  const sleepScore = Math.min(Math.floor((8 / userData.sleepGoal) * 100), 100);
-  const hydrateScore = Math.min(Math.floor((userData.hydrationGoal / 3) * 100));
-  const exerciseScore = Math.min(Math.floor((4000 / userData.dailyStepGoal) * 100));
+  const sleepScore = Math.min(Math.floor((8 / sleepData.goal) * 100), 100);
+  const hydrateScore = Math.min(Math.floor((2 / 3) * 100), 100);
+  const exerciseScore = Math.min(Math.floor((4000 / exerciseData.goal) * 100), 100);
   const score = ((sleepScore + hydrateScore + exerciseScore) / 3).toFixed(1);
 
   const getGoalStatus = () => {
@@ -32,7 +34,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView>
-        <Text style={styles.title}>👋 Welcome {userData.username}!</Text>
+        <Text style={styles.title}>👋 Welcome {profileData.username}!</Text>
       </SafeAreaView>
 
       <Modal
@@ -59,7 +61,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.scoreBox}>
         <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 5 }}>Overall Score</Text>
         <View style={{ flexDirection: "row" }}>
-          <Text style={{ fontSize: 40 }}>{score}</Text>
+          <Text style={{ fontSize: 38 }}>{score}</Text>
           <Text>out of 100</Text>
         </View>
         <View style={{ flexDirection: "row" }}>
@@ -70,7 +72,6 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <Text style={[styles.sectionTitle, { marginTop: 20 }]}>My Activities</Text>
       <View style={styles.boxContainer}>
         <TouchableOpacity style={[styles.box, { backgroundColor: "#F1ECEC" }]} onPress={() => navigation.navigate("Sleep")}>
           <FontAwesomeIcon icon={faBed} size={24} color="#091F44" />
@@ -78,7 +79,7 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.box, { backgroundColor: "#DEEBFF" }]} onPress={() => navigation.navigate("Hydration")}>
-          <FontAwesomeIcon icon={faTint} size={24} color="#091F44" />
+          <FontAwesome6 name="glass-water" size={24} color="black" />
           <Text style={styles.boxText}>Hydrate</Text>
         </TouchableOpacity>
 
@@ -88,26 +89,56 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.sectionTitle}>My Goals</Text>
+      <Text style={styles.sectionTitle}>My Daily Activity</Text>
       <View style={styles.boxContainer}>
-        <Text style={[styles.goalText, { backgroundColor: "#F1ECEC" }]}>{userData.sleepGoal} Hours </Text>
-        <Text style={[styles.goalText, { backgroundColor: "#DEEBFF" }]}>{userData.hydrationGoal} Liters</Text>
-        <Text style={[styles.goalText, { backgroundColor: "#E4F8EB" }]}>{userData.dailyStepGoal} Steps </Text>
+        {/* Weather */}
+        <View style={styles.dailyActivityBox}>
+          <Text style={{ fontWeight: "bold" }}>Weather</Text>
+          {weatherData ? (
+            <>
+              <Text>City of {weatherData.name}</Text>
+              {weatherData.weather[0].icon && <Image style={styles.weatherIcon} source={{ uri: `http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png` }} />}
+              <Text>Temp: {Math.ceil(weatherData.main.temp)}°F</Text>
+              <Text>Description: {weatherData.weather[0].description}</Text>
+            </>
+          ) : (
+            <Text>No weather data available</Text>
+          )}
+        </View>
+        {/* Sleep */}
+        <View style={styles.dailyActivityBox}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <Text style={{ fontWeight: "bold" }}>Sleep</Text>
+            <MaterialCommunityIcons name="sleep" size={20} color="black" />
+          </View>
+          <View style={styles.progCircle}>
+            <ProgressCircle radius={40} percentage={sleepScore} color={"orange"} />
+          </View>
+          <Text style={{ textAlign: "center", marginTop: 10 }}>8 / {sleepData.goal} Hours</Text>
+        </View>
       </View>
-
-      <Text style={styles.sectionTitle}>My Daily Progress</Text>
-      <View style={styles.boxContainer}>
-        <View>
-          <ProgressCircle radius={45} percentage={sleepScore} color={"orange"} />
-          <Text style={{ textAlign: "center" }}>Sleep</Text>
+      <View style={[styles.boxContainer]}>
+        {/* Hydrate */}
+        <View style={styles.dailyActivityBox}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <Text style={{ fontWeight: "bold" }}>Hydrate</Text>
+            <FontAwesomeIcon icon={faTint} size={20} color="#091F44" />
+          </View>
+          <View style={styles.progCircle}>
+            <ProgressCircle radius={40} percentage={hydrateScore} color={"blue"} />
+          </View>
+          <Text style={{ textAlign: "center", marginTop: 10 }}>2 / 3 Liters</Text>
         </View>
-        <View>
-          <ProgressCircle radius={45} percentage={hydrateScore} color={"blue"} />
-          <Text style={{ textAlign: "center" }}>Hydrate</Text>
-        </View>
-        <View>
-          <ProgressCircle radius={45} percentage={exerciseScore} color={"green"} />
-          <Text style={{ textAlign: "center" }}>Exercise</Text>
+        {/* Exercise */}
+        <View style={styles.dailyActivityBox}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <Text style={{ fontWeight: "bold" }}>Exercise</Text>
+            <Ionicons name="footsteps" size={20} color="black" />
+          </View>
+          <View style={styles.progCircle}>
+            <ProgressCircle radius={40} percentage={exerciseScore} color={"green"} />
+          </View>
+          <Text style={{ textAlign: "center", marginTop: 10 }}>4000 / {exerciseData.goal} Steps</Text>
         </View>
       </View>
     </ScrollView>
@@ -118,33 +149,50 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f2f2f2",
-    margin: 16,
   },
   title: {
     fontSize: 26,
     fontWeight: "bold",
     color: "#EC268F",
-    marginBottom: 10,
     textAlign: "center",
     marginTop: 18,
   },
   boxContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 7,
+    margin: 10,
   },
   box: {
     width: "31%",
-    height: 100,
-    backgroundColor: "#e7eaf6", // Soft blue
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
     shadowColor: "#17426B",
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 15,
     elevation: 5,
+  },
+  progCircle: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  weatherIcon: {
+    width: 60,
+    height: 60,
+    backgroundColor: "lightblue",
+    borderRadius: 25,
+    margin: 5,
+    alignSelf: "center",
+  },
+  dailyActivityBox: {
+    borderColor: "black",
+    borderWidth: 1,
+    borderRadius: 25,
+    paddingVertical: 12,
+    padding: 18,
+    width: "45%",
   },
   boxText: {
     color: "#091F44",
@@ -156,11 +204,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 22,
     fontWeight: "bold",
-    marginTop: 35,
+    marginLeft: 15,
+    marginTop: 10,
   },
   scoreBox: {
     backgroundColor: "white",
     padding: 10,
+    paddingLeft: 18,
     marginVertical: 20,
     marginHorizontal: 50,
     borderRadius: 25,
@@ -199,11 +249,6 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center",
-  },
-  goalText: {
-    padding: 10,
-    width: "31%",
     textAlign: "center",
   },
 });

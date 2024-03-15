@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
-import NewUserInfoScreen from "../screens/NewUserInfoScreen";
+import CreateProfileScreen from "../screens/CreateProfileScreen";
 import HomeScreen from "../screens/HomeScreen";
 import HydrationScreen from "../screens/HydrationScreen";
 import SleepScreen from "../screens/SleepScreen";
@@ -29,7 +29,7 @@ const AuthStackNavigator = () => (
     <AuthStack.Screen name="Splash" component={SplashScreen} />
     <AuthStack.Screen name="Login" component={LoginScreen} />
     <AuthStack.Screen name="Signup" component={SignupScreen} />
-    <AuthStack.Screen name="NewUserInfo" component={NewUserInfoScreen} />
+    <AuthStack.Screen name="CreateProfile" component={CreateProfileScreen} />
     <AuthStack.Screen name="Home" component={MainTabNavigator} />
   </AuthStack.Navigator>
 );

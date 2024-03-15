@@ -12,12 +12,10 @@ const ChangePasswordScreen = ({ navigation }) => {
   const isValid = () => {
     if (!oldPassword || !newPassword || !newPassword2) {
       setMsg("Error: Didnt fill out all fields");
-      // console.log("Didnt fill out all fields");
       return false;
     }
     if (newPassword !== newPassword2) {
       setMsg("Error: New passwords do not match.");
-      // console.log("New passwords do not match.");
       return false;
     }
     if (newPassword == oldPassword) {

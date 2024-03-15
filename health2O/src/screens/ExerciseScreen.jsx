@@ -6,6 +6,7 @@ import SVG, { Circle } from "react-native-svg";
 import useUserData from "../hooks/useUserData";
 import { auth, firestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+import RecommendationBox from "../components/RecommendationBox";
 
 const CircleProgress = Animated.createAnimatedComponent(Circle);
 const radius = 35;
@@ -14,12 +15,12 @@ const circumference = radius * Math.PI * 2;
 const ExerciseScreen = () => {
   const [stepCount, setStepCount] = useState(0);
   const [recString, setRecString] = useState("");
-  const userData = useUserData();
+  const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
   // let rec = "";
 
   let stepGoal = 8000;
-  if (!isNaN(userData.dailyStepGoal)) {
-    stepGoal = userData.dailyStepGoal;
+  if (!isNaN(exerciseData.goal)) {
+    stepGoal = exerciseData.goal;
   }
 
   const getSteps = async () => {
@@ -38,7 +39,7 @@ const ExerciseScreen = () => {
         if (pastStep) {
           setStepCount(result.steps + pastStep.steps);
         }
-        updateUserDataStepCount();
+        updateExerciseDataStepCount();
       });
     }
   };
@@ -62,10 +63,10 @@ const ExerciseScreen = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const updateUserDataStepCount = async () => {
+  const updateExerciseDataStepCount = async () => {
     try {
       // Update the value in the specified document
-      await setDoc(doc(firestore, "Users", auth.currentUser.uid), { stepcount: stepCount }, { merge: true });
+      await setDoc(doc(firestore, "Exercise", auth.currentUser.email), { stepcount: stepCount }, { merge: true });
     } catch (error) {
       console.error("Error updating document: ", error);
     }
@@ -75,14 +76,14 @@ const ExerciseScreen = () => {
   const percentWalked = (circumference - circleFilled) / circumference;
 
   let userHeight = 67;
-  if (userData.height == undefined) {
-    userHeight = userData.heightFeet * 12 + userData.heightInches;
+  if (profileData.height == undefined) {
+    userHeight = profileData.heightFeet * 12 + profileData.heightInches;
   } else {
-    userHeight = userData.height.ft * 12 + userData.height.in;
+    userHeight = profileData.height.ft * 12 + profileData.height.in;
   }
 
   let stepLength = 0;
-  if (userData.gender == "Male") {
+  if (profileData.gender == "Male") {
     stepLength = userHeight * 0.415;
   } else {
     stepLength = userHeight * 0.413;
@@ -137,18 +138,13 @@ const ExerciseScreen = () => {
 
   setInterval(recommendation, 3000);
 
-  
   return (
     <SafeAreaView style={styles.background}>
       <View style={styles.header}>
         <Text style={styles.title}>Exercise</Text>
       </View>
-      <View style={styles.recommendBox}>
-        <Text style={styles.recommendTitle}>Today's Recommendation</Text>
-        <View style={styles.recommendTextBox}>
-          <Text style={styles.recommendText}>{recString}</Text>
-        </View>
-      </View>
+      <RecommendationBox color="#E8EFE7">{recString}</RecommendationBox>
+
       <View style={styles.progressContainer}>
         <SVG height="200" width="200" viewBox="0 0 100 100">
           <Circle cx="50" cy="50" r={radius} stroke="#D3D3D3" strokeWidth="5" fill="transparent" />
@@ -169,7 +165,6 @@ const ExerciseScreen = () => {
           <Text style={styles.stepDisplay}>{stepCount}</Text>
           <Text style={styles.stepGoal}>Goal: {stepGoal} Steps</Text>
         </View>
-        
       </View>
       <View style={styles.distanceContainer}>
         <Text style={styles.distanceTitle}>Progress</Text>
@@ -193,33 +188,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
     textAlign: "center",
-  },
-  recommendBox: {
-    backgroundColor: "#FFF",
-    borderRadius: 20,
-    padding: 15,
-    marginHorizontal: 20,
-    marginTop: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  recommendTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
-  recommendTextBox: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: "#E8EFE7",
-    borderRadius: 15,
-  },
-  recommendText: {
-    fontSize: 16,
-    color: "#666",
   },
   progressContainer: {
     alignItems: "center",

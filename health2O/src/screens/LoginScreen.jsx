@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, SafeAreaView, Platform, Keyboard, KeyboardAvoidingView, ScrollView } from "react-native";
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import { auth } from "../../FirebaseConfig";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -33,8 +33,7 @@ const LoginScreen = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
         <Text style={styles.signupText}>Need an account? Sign Up</Text>
       </TouchableOpacity>
-      </KeyboardAwareScrollView>
-    
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -61,9 +60,9 @@ const styles = StyleSheet.create({
     height: 54,
     borderColor: "#D2D2D2",
     borderWidth: 2,
+    borderRadius: 15,
     marginBottom: 10,
     paddingHorizontal: 8,
-    borderRadius: 15,
   },
   loginButton: {
     width: "84%",
@@ -72,8 +71,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 10,
     marginBottom: 16,
+    paddingVertical: 10,
   },
   loginButtonText: {
     color: "white",

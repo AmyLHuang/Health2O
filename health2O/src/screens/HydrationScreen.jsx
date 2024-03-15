@@ -6,6 +6,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { Overlay } from "@rneui/base";
 import useUserData from "../hooks/useUserData";
 import { BarChart } from "react-native-chart-kit";
+import RecommendationBox from "../components/RecommendationBox";
 
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const day = daysOfWeek[new Date().getDay()];
@@ -79,8 +80,8 @@ class WaterBottle extends Component {
 }
 
 const HydrationScreen = () => {
-  const userData = useUserData();
-  const [amount, setAmount] = useState(userData.hydrationGoal);
+  const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
+  const [amount, setAmount] = useState(hydrateData.goal);
   const [selectedUnit, setSelectedUnit] = useState("Liters");
   const animated = new Animated.Value(1);
 
@@ -90,10 +91,10 @@ const HydrationScreen = () => {
   };
 
   const formatData = () => {
-    if (userData.hydration == undefined) {
+    if (hydrateData.hydration == undefined) {
       return <Text>Loading...</Text>;
     }
-    const hydrationMap = userData.hydration;
+    const hydrationMap = hydrateData.hydration;
     const days = (Object.keys(hydrationMap).slice(day + 1) + Object.keys(hydrationMap).slice(0, day + 1)).split(",");
     const amounts = days.map((day) => hydrationMap[day].amount);
     const data = {
@@ -130,13 +131,13 @@ const HydrationScreen = () => {
   };
 
   const recommendation = () => {
-    if (userData.height == undefined) {
+    if (profileData.height == undefined) {
       return "Drinking water first thing in the morning can help get your metabolism running and give you an energizing effect. - Dr. Luckey";
     }
-    const height = userData.height.ft * 12 + userData.height.in;
-    const activityLevel = userData.dailyStepGoal / 3000;
+    const height = profileData.height.ft * 12 + profileData.height.in;
+    const activityLevel = exerciseData.goal / 3000;
     let weight = 0;
-    if (userData.gender == "female") {
+    if (profileData.gender == "female") {
       weight = 100 + 5 * (height - 60);
     } else {
       weight = 106 + 6 * (height - 60);
@@ -153,13 +154,7 @@ const HydrationScreen = () => {
           <SafeAreaView>
             <Text style={styles.title}>Hydration</Text>
           </SafeAreaView>
-
-          <View style={styles.recommendBox}>
-          <Text style={styles.recommendTitle}>Recommendation</Text>
-          <View style={styles.recommendTextBox}>
-            <Text style={styles.recommendText}>{recommendation()}</Text>
-          </View>
-        </View>
+          <RecommendationBox color="#CCE0E9">{recommendation()}</RecommendationBox>
 
           <View style={{ flex: 1.2, flexDirection: "row" }}>
             <View style={styles.target}>
@@ -221,7 +216,7 @@ export default HydrationScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#E9F5FE",
+    backgroundColor: "#f2f2f2",
   },
 
   header: {
@@ -343,34 +338,5 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: "black",
     fontWeight: "bold",
-  },
-  recommendBox: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    margin: 20,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
-  },
-  recommendTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#324A60",
-    marginBottom: 10,
-  },
-  recommendTextBox: {
-    backgroundColor: "#CCE0E9",
-    borderRadius: 12,
-    padding: 10,
-  },
-  recommendText: {
-    fontSize: 16,
-    color: "#617D98",
   },
 });

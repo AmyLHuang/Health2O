@@ -12,40 +12,34 @@ const SignupScreen = ({ navigation }) => {
   const handleSignup = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const uid = userCredential.user.uid;
-      await setDoc(doc(firestore, "Users", uid), {
+      await setDoc(doc(firestore, "User", userCredential.user.email), {
         username: username,
       });
-      console.log("User created successfully!");
-      navigation.navigate("NewUserInfo");
+      navigation.navigate("CreateProfile");
     } catch (error) {
       console.error("Signup error:", error.message);
     }
   };
 
   return (
-    <KeyboardAvoidingView 
-        style={{ flex: 1 }} 
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-    <View style={styles.container}>
-      <SafeAreaView>
-        <Text style={styles.welcome}>Welcome!</Text>
-      </SafeAreaView>
-      <Text style={styles.createAccount}>Create an Account</Text>
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.input} value={username} onChangeText={setUsername} placeholder="Enter Username" autoCapitalize="none" />
-        <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="Enter Email" autoCapitalize="none" />
-        <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Enter Password" secureTextEntry />
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+      <View style={styles.container}>
+        <SafeAreaView>
+          <Text style={styles.welcome}>Welcome!</Text>
+        </SafeAreaView>
+        <Text style={styles.createAccountText}>Create an Account</Text>
+        <View style={styles.inputContainer}>
+          <TextInput style={styles.input} value={username} onChangeText={setUsername} placeholder="Enter Username" autoCapitalize="none" />
+          <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="Enter Email" autoCapitalize="none" />
+          <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Enter Password" secureTextEntry />
+        </View>
+        <TouchableOpacity style={styles.loginButton} onPress={handleSignup}>
+          <Text style={styles.loginButtonText}>Sign Up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.signupText}>Already have an account? Login</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.loginButton} onPress={handleSignup}>
-        <Text style={styles.loginButtonText}>Sign Up</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <Text style={styles.signupText}>Already have an account? Login</Text>
-      </TouchableOpacity>
-    </View>
     </KeyboardAvoidingView>
   );
 };
@@ -65,7 +59,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     marginBottom: 20,
   },
-  createAccount: {
+  createAccountText: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 15,

@@ -14,24 +14,21 @@ const EditProfileScreen = ({ navigation }) => {
   const [stepGoal, setStepGoal] = useState("");
   const [bedTimeHour, setBedTimeHour] = useState("");
   const [bedTimeMin, setBedTimeMin] = useState("");
-  const userData = useUserData();
+  const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
 
-  // console.log(userData);
   useEffect(() => {
-    if (userData) {
-      setUsername(userData.username || "");
-      setGender(userData.gender || "");
-      setAge(userData.age ? String(userData.age) : "");
-      setHeightFt(userData.height ? String(userData.height.ft) : "");
-      setHeightIn(userData.height ? String(userData.height.in) : "");
-      setDailySleepGoal(userData.sleepGoal ? String(userData.sleepGoal) : "");
-      setStepGoal(userData.dailyStepGoal ? String(userData.dailyStepGoal) : "");
-      setBedTimeHour(userData.bedtime ? String(userData.bedtime.hh) : "");
-      setBedTimeMin(userData.bedtime ? String(userData.bedtime.mm) : "");
-    }
-  }, [userData]);
+    setUsername(profileData.username || "");
+    setGender(profileData.gender || "");
+    setAge(profileData.age ? String(profileData.age) : "");
+    setHeightFt(profileData.height ? String(profileData.height.ft) : "");
+    setHeightIn(profileData.height ? String(profileData.height.in) : "");
+    setStepGoal(exerciseData.goal ? String(exerciseData.goal) : "");
+    setDailySleepGoal(sleepData.goal ? String(sleepData.goal) : "");
+    setBedTimeHour(sleepData.bedtime ? String(sleepData.bedtime.hh) : "");
+    setBedTimeMin(sleepData.bedtime ? String(sleepData.bedtime.mm) : "");
+  }, [profileData, sleepData, hydrateData, exerciseData]);
 
-  const info = {
+  const profileInfo = {
     username: username,
     age: parseInt(age),
     height: {
@@ -39,12 +36,18 @@ const EditProfileScreen = ({ navigation }) => {
       in: parseInt(heightIn),
     },
     gender: gender,
-    dailyStepGoal: parseInt(stepGoal),
-    sleepGoal: parseInt(dailySleepGoal),
+  };
+
+  const sleepInfo = {
+    goal: parseInt(sleepGoal),
     bedtime: {
       hh: bedTimeHour,
       mm: bedTimeMin,
     },
+  };
+
+  const exerciseInfo = {
+    goal: parseInt(stepGoal),
   };
 
   // confirmation if user wants to update profile
@@ -63,7 +66,9 @@ const EditProfileScreen = ({ navigation }) => {
   // update database with new profile info
   const updateFirestoreDocument = async () => {
     try {
-      await setDoc(doc(firestore, "Users", auth.currentUser.uid), info, { merge: true });
+      await setDoc(doc(firestore, "User", auth.currentUser.email), profileInfo, { merge: true });
+      await setDoc(doc(firestore, "Sleep", auth.currentUser.email), sleepInfo, { merge: true });
+      await setDoc(doc(firestore, "Exercise", auth.currentUser.email), exerciseInfo, { merge: true });
       Alert.alert("Successfully updated profile info");
     } catch (error) {
       console.error("Error updating document: ", error);
@@ -98,9 +103,10 @@ const EditProfileScreen = ({ navigation }) => {
 
         <Text style={styles.label}>Daily Sleep Goal</Text>
         <TextInput style={styles.input} value={dailySleepGoal} onChangeText={(text) => setDailySleepGoal(text)} keyboardType="numeric" />
-        
+
         <Text style={styles.label}>Daily Step Goal</Text>
         <TextInput style={styles.input} value={stepGoal} onChangeText={(text) => setStepGoal(text)} keyboardType="numeric" />
+
         <Text style={styles.label}>Bedtime</Text>
         <View style={styles.inputRowContainer}>
           <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setBedTimeHour(text)} value={bedTimeHour} placeholder="Hour" keyboardType="numeric" />
@@ -120,7 +126,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f2f2f2",
-    padding: 20,
+  },
+  scrollContainer: {
+    padding: 18,
   },
   label: {
     fontSize: 16,

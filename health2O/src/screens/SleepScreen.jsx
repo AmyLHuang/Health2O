@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useUserData from "../hooks/useUserData";
+import RecommendationBox from "../components/RecommendationBox";
 
 const SleepScreen = () => {
-  const userData = useUserData();
+  const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
   const [wakeTime, setWakeTime] = useState(new Date(0, 0, 0, 7, 0));
   const [showTimePicker, setShowTimePicker] = useState(false);
 
-  let sleepHours = userData.sleepGoal;
+  let sleepHours = sleepData.goal;
   let rec = "";
 
   const bedTime = new Date(wakeTime);
@@ -24,11 +25,11 @@ const SleepScreen = () => {
   const recommendation = () => {
     if (showTimePicker == true) {
       rec = "Be careful! Changing your sleep schedule too often can result in lower sleep quality and higher stress!";
-    } else if (userData.sleepGoal < 7) {
+    } else if (sleepData.goal < 7) {
       rec = "Sleeping less than 7 hours a day can lead to many health issues and lack of productivity throughout the day.";
     } else if (bedTime.getHours() < 18 && bedTime.getHours() > 6) {
       rec = "If you're planning on sleeping early in the day, darkening your room can help immensely in falling asleep and improving the quality of your sleep!";
-    } else if (userData.stepcount < userData.dailyStepGoal) {
+    } else if (exerciseData.stepcount < exerciseData.goal) {
       if (bedTime.getHours() - new Date().getHours() > 4) {
         rec = "Regular physical activity helps aiding in sleep quality and duration!";
       } else {
@@ -41,7 +42,7 @@ const SleepScreen = () => {
       } else if (randomnum == 1) {
         rec = "Exposure to electronic screens before bedtime upsets your body's abilty to fall asleep. Try limiting screen time to an hour before your bedtime.";
       } else if (randomnum == 2) {
-        if (userData.age > 20) {
+        if (profileData.age > 20) {
           rec = "Drinking alcohol close to bedtime can lead to disruptions to your sleep and decrease sleep quality. Try limiting alcohol consumption to 4 hours before bedtime!";
         } else {
           rec = "If you're having trouble falling asleep, try limiting your bed to sleeping times only. Try to avoid doing any other tasks such as reading, eating, or listening to music.";
@@ -60,13 +61,7 @@ const SleepScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Text style={styles.title}>Sleep Tracker</Text>
 
-        <View style={styles.recommendBox}>
-          <Text style={styles.recommendTitle}>Tonight's Recommendation</Text>
-          <View style={styles.recommendTextBox}>
-            <Text style={styles.recommendText}>{recommendation()}</Text>
-          </View>
-        </View>
-
+        <RecommendationBox color="#FFF7E0">{recommendation()}</RecommendationBox>
         <View style={styles.timeContainer}>
           <View style={styles.timeBox}>
             <Text style={styles.timeLabel}>Bedtime</Text>
@@ -82,11 +77,11 @@ const SleepScreen = () => {
         <TouchableOpacity style={styles.button} onPress={() => setShowTimePicker(!showTimePicker)}>
           <Text style={styles.buttonText}>Set Wake Time</Text>
         </TouchableOpacity>
-        { showTimePicker && (<View style={styles.centeredPicker}>
-      <DateTimePicker mode={"time"} value={wakeTime} onChange={onChange} />
-    </View>
-        )
-  }
+        {showTimePicker && (
+          <View style={styles.centeredPicker}>
+            <DateTimePicker mode={"time"} value={wakeTime} onChange={onChange} />
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -107,35 +102,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     textAlign: "center",
-  },
-  recommendBox: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    margin: 20,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
-  },
-  recommendTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#324A60",
-    marginBottom: 10,
-  },
-  recommendTextBox: {
-    backgroundColor: "#FFF7E0",
-    borderRadius: 12,
-    padding: 10,
-  },
-  recommendText: {
-    fontSize: 16,
-    color: "#5D4037",
   },
   timeContainer: {
     flexDirection: "row",
@@ -180,10 +146,9 @@ const styles = StyleSheet.create({
   },
   centeredPicker: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-  
 });
 
 export default SleepScreen;

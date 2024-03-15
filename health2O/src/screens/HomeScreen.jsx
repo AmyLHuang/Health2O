@@ -11,7 +11,7 @@ const HomeScreen = ({ navigation }) => {
   const userData = useUserData();
 
   const sleepScore = Math.min(Math.floor((8 / userData.sleepGoal) * 100), 100);
-  const hydrateScore = Math.min(Math.floor((userData.hydrationGoal / 3) * 100));
+  const hydrateScore = Math.min(Math.floor((3 / userData.hydrationGoal) * 100));
   const exerciseScore = Math.min(Math.floor((4000 / userData.dailyStepGoal) * 100));
   const score = ((sleepScore + hydrateScore + exerciseScore) / 3).toFixed(1);
 

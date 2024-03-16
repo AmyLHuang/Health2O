@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Button, StyleSheet, TextInput, Switch, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, Button, StyleSheet, TextInput, ScrollView } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useUserData from "../hooks/useUserData";
 import RecommendationBox from "../components/RecommendationBox";
@@ -10,8 +10,8 @@ const SleepScreen = () => {
   const { profileData, sleepData, exerciseData } = useUserData();
   const [wakeTime, setWakeTime] = useState(new Date(0, 0, 0, 7, 0));
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [isSwitchOn, setIsSwitchOn] = useState(true);
   const [inputValue, setInputValue] = useState("");
+  const [log, setLog] = useState("");
 
   let sleepHours = sleepData.goal;
   let rec = "";
@@ -22,29 +22,14 @@ const SleepScreen = () => {
   let bedTimeString = bedTime.toLocaleTimeString().replace(/(.*)\D\d+/, "$1");
   let wakeTimeString = wakeTime.toLocaleTimeString().replace(/(.*)\D\d+/, "$1");
 
-  const onChange = (event, selectedTime) => {
-    setWakeTime(selectedTime);
-  };
-
   const handleSubmit = async () => {
     if (inputValue.trim() === "") return;
     try {
-      await setDoc(doc(firestore, "Sleep", auth.currentUser.email), { prevNight: inputValue }, { merge: true });
+      await setDoc(doc(firestore, "Sleep", auth.currentUser.email), { prevNight: parseInt(inputValue) }, { merge: true });
       setInputValue("");
+      setLog(inputValue);
     } catch (error) {
       console.error("Error updating document: ", error);
-    }
-  };
-
-  const handleToggleChange = async (value) => {
-    setIsSwitchOn(value);
-    if (value) {
-      try {
-        await setDoc(doc(firestore, "Sleep", auth.currentUser.email), { prevNight: sleepHours }, { merge: true });
-        setInputValue("");
-      } catch (error) {
-        console.error("Error updating document: ", error);
-      }
     }
   };
 
@@ -55,7 +40,7 @@ const SleepScreen = () => {
       rec = "Sleeping less than 7 hours a day can lead to many health issues and lack of productivity throughout the day.";
     } else if (bedTime.getHours() < 18 && bedTime.getHours() > 6) {
       rec = "If you're planning on sleeping early in the day, darkening your room can help immensely in falling asleep and improving the quality of your sleep!";
-    } else if (exerciseData.stepcount < exerciseData.goal) {
+    } else if (exerciseData.stepCount < exerciseData.goal) {
       if (bedTime.getHours() - new Date().getHours() > 4) {
         rec = "Regular physical activity helps aiding in sleep quality and duration!";
       } else {
@@ -96,31 +81,30 @@ const SleepScreen = () => {
           <View style={styles.separator}></View>
           <View style={styles.timeBox}>
             <Text style={styles.timeLabel}>Wake Up Time</Text>
-            <Text style={styles.time}>{wakeTimeString}</Text>
+            <DateTimePicker mode={"time"} value={wakeTime} onChange={(event, selectedTime) => setWakeTime(selectedTime)} />
+            {/* <Text style={styles.time}>{wakeTimeString}</Text> */}
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={() => setShowTimePicker(!showTimePicker)}>
+        <Text style={{ textAlign: "center", marginTop: 10 }}>Goal: {sleepData.goal} Hours</Text>
+        {/* <Text style={{ textAlign: "center", marginTop: 10 }}>Last Night: {log || sleepData.prevNight} hrs.</Text> */}
+
+        {/* <TouchableOpacity style={styles.button} onPress={() => setShowTimePicker(!showTimePicker)}>
           <Text style={styles.buttonText}>Set Wake Time</Text>
         </TouchableOpacity>
         {showTimePicker && (
           <View style={styles.centeredPicker}>
-            <DateTimePicker mode={"time"} value={wakeTime} onChange={onChange} />
+            <DateTimePicker mode={"time"} value={wakeTime} onChange={(event, selectedTime) => setWakeTime(selectedTime)} />
           </View>
-        )}
+        )} */}
 
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.headerText}>Met my goal last night</Text>
-            <Switch value={isSwitchOn} thumbColor={isSwitchOn ? "#FFB347" : "gray"} trackColor={{ false: "gray", true: "#FFEFCC" }} onValueChange={handleToggleChange} />
-          </View>
+        <View style={styles.logContainer}>
           <View style={{ flexDirection: "row" }}>
-            {!isSwitchOn && (
-              <>
-                <TextInput style={styles.input} keyboardType="numeric" placeholder="Hrs slept" value={inputValue} onChangeText={setInputValue} />
-                <Button title="Submit" onPress={handleSubmit} />
-              </>
-            )}
+            <Text style={styles.headerText}>Hours Slept Last Night</Text>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TextInput style={styles.input} keyboardType="numeric" placeholder={String(log || sleepData.prevNight) + " Hours"} value={inputValue} onChangeText={setInputValue} />
+            <Button style={{ fontSize: 10 }} title="Update" onPress={handleSubmit} />
           </View>
         </View>
       </ScrollView>
@@ -177,7 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     marginHorizontal: 50,
-    marginTop: 30,
+    marginTop: 20,
     paddingVertical: 12,
   },
   buttonText: {
@@ -190,26 +174,32 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  container: {
+  logContainer: {
+    backgroundColor: "white",
+    width: "auto",
+    alignSelf: "flex-end",
     alignItems: "center",
-    padding: 20,
-    marginTop: "40%",
+    padding: 10,
+    margin: 15,
+    marginTop: 20,
+    opacity: 0.8,
+    borderRadius: 10,
   },
-  header: {
+  row: {
     flexDirection: "row",
-    alignItems: "center",
     marginBottom: 10,
   },
   headerText: {
-    fontSize: 18,
     marginRight: 10,
   },
   input: {
-    width: "25%",
+    width: "30%",
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 25,
+    borderRadius: 10,
+    marginTop: 5,
     padding: 10,
+    textAlign: "center",
   },
 });
 

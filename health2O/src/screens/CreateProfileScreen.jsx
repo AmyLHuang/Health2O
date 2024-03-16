@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TextInput, Text, StyleSheet, Alert, ScrollView, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Platform } from "react-native";
 import { auth, firestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+import { Pedometer } from "expo-sensors";
 
 const CreateProfileScreen = ({ navigation }) => {
   const [age, setAge] = useState("");
@@ -10,36 +11,50 @@ const CreateProfileScreen = ({ navigation }) => {
   const [heightIn, setHeightIn] = useState("");
   const [sleepGoal, setSleepGoal] = useState("");
   const [stepGoal, setStepGoal] = useState("");
-  const [bedTimeHour, setBedTimeHour] = useState("");
-  const [bedTimeMin, setBedTimeMin] = useState("");
+  const [curSteps, setCurSteps] = useState(0);
+  // const [bedTimeHour, setBedTimeHour] = useState("");
+  // const [bedTimeMin, setBedTimeMin] = useState("");
+
+  const getSteps = async () => {
+    const isAvailable = await Pedometer.isAvailableAsync();
+
+    if (isAvailable) {
+      var currentDate = new Date();
+      var beginningOfDay = new Date(currentDate);
+      beginningOfDay.setHours(0, 0, 0, 0);
+
+      const stepsToday = await Pedometer.getStepCountAsync(beginningOfDay, currentDate);
+      setCurSteps(stepsToday.steps);
+    }
+  };
+
+  useEffect(() => {
+    getSteps();
+  }, []);
 
   const handleSignup = async () => {
-    if (!age || !gender || !heightFt || !heightIn || !sleepGoal || !stepGoal || !bedTimeHour || !bedTimeMin) {
+    if (!age || !gender || !heightFt || !heightIn || !sleepGoal || !stepGoal) {
       Alert.alert("Error", "Please fill in all fields.");
       return;
     }
 
     const profileInfo = {
       age: parseInt(age),
+      gender: gender,
       height: {
         ft: parseInt(heightFt),
         in: parseInt(heightIn),
       },
-      gender: gender,
     };
 
     const sleepInfo = {
       goal: parseInt(sleepGoal),
-      bedtime: {
-        hh: bedTimeHour,
-        mm: bedTimeMin,
-      },
       prevNight: parseInt(sleepGoal),
     };
 
     const exerciseInfo = {
       goal: parseInt(stepGoal),
-      stepcount: 0,
+      stepCount: curSteps,
     };
 
     const hydrateInfo = {
@@ -67,7 +82,10 @@ const CreateProfileScreen = ({ navigation }) => {
         </SafeAreaView>
 
         <Text style={styles.label}>Age</Text>
-        <TextInput style={styles.input} placeholder="Enter your age" keyboardType="numeric" onChangeText={(text) => setAge(text.replace(/[^0-9]/g, ""))} value={age} />
+        <TextInput style={styles.input} placeholder="Specify your age" keyboardType="numeric" onChangeText={(text) => setAge(text.replace(/[^0-9]/g, ""))} value={age} />
+
+        <Text style={styles.label}>Gender</Text>
+        <TextInput style={styles.input} placeholder="Specify your gender" onChangeText={setGender} value={gender} />
 
         <Text style={styles.label}>Height</Text>
         <View style={styles.row}>
@@ -75,20 +93,17 @@ const CreateProfileScreen = ({ navigation }) => {
           <TextInput style={[styles.input, styles.inputHalf]} placeholder="Inches" keyboardType="numeric" onChangeText={(text) => setHeightIn(text.replace(/[^0-9]/g, ""))} value={heightIn} />
         </View>
 
-        <Text style={styles.label}>Gender</Text>
-        <TextInput style={styles.input} placeholder="Specify your gender" onChangeText={setGender} value={gender} />
-
         <Text style={styles.label}>Daily Step Goal</Text>
         <TextInput style={styles.input} placeholder="Target daily steps" keyboardType="numeric" onChangeText={(text) => setStepGoal(text.replace(/[^0-9]/g, ""))} value={stepGoal} />
 
         <Text style={styles.label}>Sleep Goal (hrs)</Text>
         <TextInput style={styles.input} placeholder="Target sleep hours" keyboardType="numeric" onChangeText={(text) => setSleepGoal(text.replace(/[^0-9]/g, ""))} value={sleepGoal} />
 
-        <Text style={styles.label}>Bed Time</Text>
+        {/* <Text style={styles.label}>Bed Time</Text>
         <View style={styles.row}>
           <TextInput style={[styles.input, styles.inputHalf]} placeholder="HH" keyboardType="numeric" onChangeText={setBedTimeHour} value={bedTimeHour} />
           <TextInput style={[styles.input, styles.inputHalf]} placeholder="MM" keyboardType="numeric" onChangeText={setBedTimeMin} value={bedTimeMin} />
-        </View>
+        </View> */}
 
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>

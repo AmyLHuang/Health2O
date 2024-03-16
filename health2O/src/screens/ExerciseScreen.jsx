@@ -17,7 +17,7 @@ const ExerciseScreen = () => {
   const [pastStepCount, setPastStepCount] = useState(0);
   const [recString, setRecString] = useState("");
   const { profileData, exerciseData } = useUserData();
-  const [stepCount, setStepCount] = useState(exerciseData.stepcount);
+  const [stepCount, setStepCount] = useState(exerciseData.stepCount);
 
   const stepGoal = exerciseData.goal;
 
@@ -50,7 +50,7 @@ const ExerciseScreen = () => {
     setStepCount(count + pastStepCount);
     if (pastStepCount > 0) {
       try {
-        await setDoc(doc(firestore, "Exercise", auth.currentUser.email), { stepcount: count + pastStepCount }, { merge: true });
+        await setDoc(doc(firestore, "Exercise", auth.currentUser.email), { stepCount: count + pastStepCount }, { merge: true });
       } catch (error) {
         console.error("Error updating document: ", error);
       }

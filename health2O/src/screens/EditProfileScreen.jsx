@@ -6,44 +6,38 @@ import useUserData from "../hooks/useUserData";
 
 const EditProfileScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
-  const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
   const [heightFt, setHeightFt] = useState("");
   const [heightIn, setHeightIn] = useState("");
-  const [sleepGoal, setSleepGoal] = useState("");
   const [stepGoal, setStepGoal] = useState("");
-  const [bedTimeHour, setBedTimeHour] = useState("");
-  const [bedTimeMin, setBedTimeMin] = useState("");
+  const [sleepGoal, setSleepGoal] = useState("");
+
   const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
 
   useEffect(() => {
     setUsername(profileData.username || "");
-    setGender(profileData.gender || "");
     setAge(profileData.age ? String(profileData.age) : "");
+    setGender(profileData.gender || "");
     setHeightFt(profileData.height ? String(profileData.height.ft) : "");
     setHeightIn(profileData.height ? String(profileData.height.in) : "");
+    setGender(profileData.gender || "");
     setStepGoal(exerciseData.goal ? String(exerciseData.goal) : "");
     setSleepGoal(sleepData.goal ? String(sleepData.goal) : "");
-    setBedTimeHour(sleepData.bedtime ? String(sleepData.bedtime.hh) : "");
-    setBedTimeMin(sleepData.bedtime ? String(sleepData.bedtime.mm) : "");
   }, [profileData, sleepData, hydrateData, exerciseData]);
 
   const profileInfo = {
     username: username,
     age: parseInt(age),
+    gender: gender,
     height: {
       ft: parseInt(heightFt),
       in: parseInt(heightIn),
     },
-    gender: gender,
   };
 
   const sleepInfo = {
     goal: parseInt(sleepGoal),
-    bedtime: {
-      hh: bedTimeHour,
-      mm: bedTimeMin,
-    },
   };
 
   const exerciseInfo = {
@@ -89,11 +83,11 @@ const EditProfileScreen = ({ navigation }) => {
         <Text style={styles.label}>Username</Text>
         <TextInput style={styles.input} onChangeText={(text) => setUsername(text)} value={username} />
 
-        <Text style={styles.label}>Gender</Text>
-        <TextInput style={styles.input} onChangeText={(text) => setGender(text)} value={gender} />
-
         <Text style={styles.label}>Age</Text>
         <TextInput style={styles.input} onChangeText={(text) => setAge(text)} value={age} />
+
+        <Text style={styles.label}>Gender</Text>
+        <TextInput style={styles.input} onChangeText={(text) => setGender(text)} value={gender} />
 
         <Text style={styles.label}>Height</Text>
         <View style={styles.inputRowContainer}>
@@ -107,11 +101,11 @@ const EditProfileScreen = ({ navigation }) => {
         <Text style={styles.label}>Daily Step Goal</Text>
         <TextInput style={styles.input} value={stepGoal} onChangeText={(text) => setStepGoal(text)} keyboardType="numeric" />
 
-        <Text style={styles.label}>Bedtime</Text>
+        {/* <Text style={styles.label}>Bedtime</Text>
         <View style={styles.inputRowContainer}>
           <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setBedTimeHour(text)} value={bedTimeHour} placeholder="Hour" keyboardType="numeric" />
           <TextInput style={[styles.input, styles.inputRow]} onChangeText={(text) => setBedTimeMin(text)} value={bedTimeMin} placeholder="Minute" keyboardType="numeric" />
-        </View>
+        </View> */}
 
         {/* Update Button */}
         <TouchableOpacity onPress={handleUpdatePress} style={styles.updateButton}>

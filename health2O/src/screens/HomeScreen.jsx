@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
 
   const sleepScore = Math.min(Math.floor((sleepData.prevNight / sleepData.goal) * 100), 100);
   const hydrateScore = Math.min(Math.floor((hydrateData?.currentAmount / hydrateData?.goal) * 100), 100);
-  const exerciseScore = Math.min(Math.floor((exerciseData.stepcount / exerciseData.goal) * 100), 100);
+  const exerciseScore = Math.min(Math.floor((exerciseData.stepCount / exerciseData.goal) * 100), 100);
 
   const score = ((sleepScore + hydrateScore + exerciseScore) / 3).toFixed(1);
 
@@ -144,7 +144,7 @@ const HomeScreen = ({ navigation }) => {
             <ProgressCircle radius={40} percentage={exerciseScore} color={"green"} />
           </View>
           <Text style={{ textAlign: "center", marginTop: 10 }}>
-            {exerciseData.stepcount} / {exerciseData.goal} Steps
+            {exerciseData.stepCount} / {exerciseData.goal} Steps
           </Text>
         </View>
       </View>

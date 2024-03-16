@@ -70,7 +70,7 @@ class WaterBottle extends Component {
           <View style={styles.bottle}>
             <Animated.View style={[styles.water, { height: waterLevel }]} />
             <Text style={styles.currentAmountText}>
-              {currentAmount}/{this.props.target} Liters
+              {currentAmount}/{this.props.target || 3} Liters
             </Text>
             <Text style={[styles.currentAmountText, { top: "10%", color: "white" }]}>{this.targetReached()}</Text>
           </View>
@@ -81,7 +81,7 @@ class WaterBottle extends Component {
 }
 
 const HydrationScreen = () => {
-  const { profileData, sleepData, hydrateData, exerciseData } = useUserData();
+  const { profileData, hydrateData, exerciseData } = useUserData();
   const [amount, setAmount] = useState(hydrateData.goal);
   const [selectedUnit, setSelectedUnit] = useState("Liters");
   const animated = new Animated.Value(1);

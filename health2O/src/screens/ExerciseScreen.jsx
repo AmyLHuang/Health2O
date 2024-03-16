@@ -191,8 +191,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: "600",
+    color: "#324A60",
+    marginTop: 20,
+    marginBottom: 20,
     textAlign: "center",
   },
   progressContainer: {

@@ -7,6 +7,7 @@ import useUserData from "../hooks/useUserData";
 import { auth, firestore } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import RecommendationBox from "../components/RecommendationBox";
+import useWeatherData from "../hooks/useWeatherData";
 
 const CircleProgress = Animated.createAnimatedComponent(Circle);
 const radius = 35;
@@ -18,6 +19,7 @@ const ExerciseScreen = () => {
   const [recString, setRecString] = useState("");
   const { profileData, exerciseData } = useUserData();
   const [stepCount, setStepCount] = useState(exerciseData.stepCount);
+  const weatherData = useWeatherData();
 
   const stepGoal = exerciseData.goal;
 
@@ -72,7 +74,7 @@ const ExerciseScreen = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setRecString(recommendation());
-    }, 10000);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -107,7 +109,7 @@ const ExerciseScreen = () => {
       rec = "It may be a good idea to rest for the rest of the day. Don't try to overexert yourself!";
     } else {
       let randomnum = Math.floor(Math.random() * 10);
-      if (randomnum < 7) {
+      if (randomnum < 8) {
         if (randomnum == 0) {
           rec = "Finding a friend to exercise with you is a great motivator for sticking to a routine.";
         } else if (randomnum == 1) {
@@ -122,6 +124,14 @@ const ExerciseScreen = () => {
           rec = "Be sure to always give yourself rest! Downtime is needed to let your muscles heal and prevent injuries.";
         } else if (randomnum == 6) {
           rec = "Planning out a time to exercise in your day is a great motivator to get up and move!";
+        } else if (randomnum == 7 && weatherData) {
+          if (Math.ceil(weatherData.main.temp) > 80) {
+            rec = "Careful! It is a hot day today! Be sure to hydrate plenty and rest often when exercising. Exercising indoors is also recommended!"
+          } else if (Math.ceil(weatherData.main.temp) < 40) {
+            rec = "It may be good idea to avoid exercising outside. The weather is very cold today so if you still do, be sure to wear warm layers!"
+          } else {
+            rec = "Go for a jog and get some fresh air outside! The current weather is perfect for moving around!"
+          }
         }
       } else {
         if (distanceToWalk < 0.5) {

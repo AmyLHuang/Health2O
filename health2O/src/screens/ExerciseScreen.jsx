@@ -74,7 +74,7 @@ const ExerciseScreen = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setRecString(recommendation());
-    }, 1000);
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 

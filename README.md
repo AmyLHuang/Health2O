@@ -1,10 +1,10 @@
-# Health2O
+# Health₂O
 Health₂O is a wellness advisor app focused on three essential wellness categories: exercise, sleep, and hydration. Our mission is to help users lead healthier lives by providing a comprehensive solution to manage and improve these critical areas.
 
 How to run this code locally (make sure you have nodejs installed)
 ---
 1. `git clone https://github.com/AmyLHuang/Health2O.git`
-2. `cd health20`
+2. `cd Health2O/health2O`
 3. `npm install`
 4. `npx expo start`
 
@@ -25,8 +25,6 @@ Frameworks
 1. React Native
 2. Expo
 3. Firebase
-
-
 
 Resources/Citations
 ---

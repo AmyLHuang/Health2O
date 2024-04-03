@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import axios from "axios";
 
-const API_KEY = "fd776bec97148d909df22c375744705c";
+const API_KEY = "your_api_key";
 const API_URL = "https://api.openweathermap.org/data/2.5/weather";
 
 const useWeatherData = () => {

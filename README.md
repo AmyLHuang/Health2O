@@ -7,7 +7,7 @@ Health₂O is a wellness advisor app focused on three essential wellness categor
 1. Clone the Repository: `git clone https://github.com/AmyLHuang/Health2O.git`
 2. Navigate the the Project Directory: `cd Health2O/health2O`
 3. Install Dependencies: `npm install`
-4. In file Health2O/health2O/src/hooks/useWeatherData.jsx line #5, replace your_api_key with your actual key. More details about OpenWeather below.
+4. In file ~/Health2O/health2O/src/hooks/useWeatherData.jsx line #5, replace "your_api_key" with your actual key. More details about OpenWeather below.
 5. Run the application: `npx expo start`
 
 ## OpenWeather
